@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse at 50% 40%, #fff9ee 0%, #fdf3d8 40%, #f8e9c0 70%, #f3ddb0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        .panel-blanco {
+            width: min(90vw, 720px);
+            height: min(78vh, 520px);
+            background: #ffffff;
+            border-radius: 22px;
+            box-shadow:
+                0 20px 60px rgba(180, 140, 80, 0.20),
+                0 4px 14px rgba(180, 140, 80, 0.10);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c0b39a;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .panel-blanco span {
+            opacity: 0.55;
+        }
+    </style>
+</head>
+<body>
+    <div class="panel-blanco">
+        <span>Panel en construcción…</span>
+    </div>
+
+    <script src="../js/musica.js"></script>
+</body>
+</html>

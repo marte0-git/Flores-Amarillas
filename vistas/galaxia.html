@@ -1,0 +1,2453 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <title>Galaxia 3D con mis imágenes ✨</title>
+
+    <!-- ============================================================
+         ESTILOS
+    ============================================================ -->
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #050510;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            touch-action: none;
+        }
+
+        canvas {
+            display: block;
+        }
+
+
+        /* ============================================================
+           TEXTO INFORMATIVO
+        ============================================================ */
+
+        .info {
+            position: absolute;
+            bottom: 18px;
+            left: 0;
+            right: 0;
+
+            text-align: center;
+
+            color: rgba(255, 255, 255, 0.7);
+
+            font-size: 14px;
+            letter-spacing: 2px;
+
+            text-shadow:
+                0 0 15px #8a6eff,
+                0 0 30px #4a2eff;
+
+            pointer-events: none;
+
+            z-index: 10;
+
+            padding: 10px;
+
+            background: rgba(10, 5, 20, 0.3);
+
+            backdrop-filter: blur(4px);
+
+            border-top: 1px solid rgba(180, 140, 255, 0.3);
+            border-bottom: 1px solid rgba(180, 140, 255, 0.3);
+        }
+
+        .info span {
+            display: inline-block;
+            animation: pulse 3s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.7;
+            }
+
+            50% {
+                opacity: 1;
+
+                text-shadow:
+                    0 0 25px #b28aff,
+                    0 0 45px #7a4eff;
+            }
+        }
+
+
+        /* ============================================================
+           PANTALLA DE CARGA
+        ============================================================ */
+
+        #loader {
+            position: fixed;
+            inset: 0;
+
+            background: #050510;
+
+            color: #cbb6ff;
+
+            display: flex;
+            flex-direction: column;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 20px;
+
+            font-size: 18px;
+            letter-spacing: 2px;
+
+            z-index: 100;
+
+            transition: opacity 0.8s ease;
+        }
+
+        #loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+
+            border: 3px solid rgba(180, 140, 255, 0.2);
+            border-top-color: #b28aff;
+
+            border-radius: 50%;
+
+            animation: spin 1s linear infinite;
+
+            box-shadow:
+                0 0 30px rgba(178, 138, 255, 0.5);
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+
+        /* ============================================================
+           BOTÓN "RECUERDO FINAL"
+        ============================================================ */
+
+        .btn-recuerdo {
+            position: fixed;
+
+            top: 26px;
+            left: 28px;
+
+            z-index: 100;
+
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            padding: 12px 24px;
+
+            border-radius: 999px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f6c344 0%,
+                    #e8a517 55%,
+                    #c07a10 100%
+                );
+
+            color: #4a2a08;
+
+            border: 1.5px solid rgba(255, 235, 180, 0.75);
+
+            font-family: 'Segoe UI', system-ui, sans-serif;
+
+            font-weight: 700;
+            font-size: 0.95rem;
+
+            letter-spacing: 0.8px;
+
+            white-space: nowrap;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 8px 22px rgba(160, 90, 10, 0.45),
+                0 2px 6px rgba(0, 0, 0, 0.20),
+                inset 0 1px 0 rgba(255, 255, 255, 0.45);
+
+            transition:
+                transform 0.22s ease,
+                box-shadow 0.22s ease,
+                filter 0.22s ease;
+        }
+
+        .btn-recuerdo .btn-recuerdo-icono {
+            font-size: 1.1em;
+
+            filter:
+                drop-shadow(
+                    0 1px 2px rgba(120, 70, 10, 0.4)
+                );
+        }
+
+        .btn-recuerdo:hover {
+            transform: translateY(-2px) scale(1.02);
+
+            filter: brightness(1.06);
+
+            box-shadow:
+                0 12px 28px rgba(160, 90, 10, 0.55),
+                0 4px 10px rgba(0, 0, 0, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.55);
+        }
+
+        .btn-recuerdo:active {
+            transform: translateY(0) scale(0.99);
+
+            box-shadow:
+                0 5px 14px rgba(160, 90, 10, 0.40),
+                inset 0 2px 5px rgba(90, 50, 5, 0.30);
+        }
+
+        .btn-recuerdo:focus-visible {
+            outline: 3px solid rgba(255, 235, 150, 0.85);
+            outline-offset: 3px;
+        }
+
+
+        /* ============================================================
+           RESPONSIVE
+        ============================================================ */
+
+        @media (max-width: 600px) {
+
+            .btn-recuerdo {
+                top: 16px;
+                left: 16px;
+
+                padding: 10px 18px;
+
+                font-size: 0.85rem;
+
+                gap: 6px;
+            }
+
+            .info {
+                font-size: 11px;
+                letter-spacing: 1px;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+    <!-- ============================================================
+         PANTALLA DE CARGA
+    ============================================================ -->
+
+    <div id="loader">
+
+        <div class="spinner"></div>
+
+        <div>
+            Cargando galaxia...
+        </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         BOTÓN RECUERDO FINAL
+    ============================================================ -->
+
+    <button
+        class="btn-recuerdo"
+        id="btnRecuerdo"
+        type="button"
+    >
+
+        <span class="btn-recuerdo-icono">
+            🌻
+        </span>
+
+        <span>
+            Recuerdo final
+        </span>
+
+    </button>
+
+
+    <!-- ============================================================
+         INFORMACIÓN
+    ============================================================ -->
+
+    <div class="info">
+
+        <span>
+            ✨ arrastra para girar · rueda/pellizco para zoom ✨
+        </span>
+
+    </div>
+
+
+    <!-- ============================================================
+         IMPORTMAP
+    ============================================================ -->
+
+    <script type="importmap">
+
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+
+    </script>
+
+
+    <!-- ============================================================
+         JAVASCRIPT PRINCIPAL
+    ============================================================ -->
+
+    <script type="module">
+
+        import * as THREE from 'three';
+
+        import {
+            OrbitControls
+        } from 'three/addons/controls/OrbitControls.js';
+
+
+        // ============================================================
+        // BOTÓN "RECUERDO FINAL"
+        // ============================================================
+
+        document
+            .getElementById('btnRecuerdo')
+            .addEventListener('click', () => {
+
+                // Fade suave antes de redirigir
+                document.body.style.transition =
+                    'opacity 0.8s ease';
+
+                document.body.style.opacity = '0';
+
+                setTimeout(() => {
+
+                    window.location.href =
+                        'recuerdo-final.html';
+
+                }, 700);
+
+            });
+
+
+        // ============================================================
+        // ⚙️ CONFIGURACIÓN PRINCIPAL
+        // ============================================================
+
+const CONFIG = {
+
+    STICKER_COUNT: 100,        // déjalo como quieras (10 está bien para ver cada imagen)
+
+    CORE_RADIUS: 0.5,           // hueco central (ok)
+
+    GALAXY_RADIUS: 86,       // 👈 ANTES 130 → más extendida (que se note "estirar")
+
+    SPIRAL_TURNS: 2.5,        // espiral (ok)
+
+    DISK_THICKNESS: 15,       // 👈 un poco más de volumen 3D
+
+    ROTATION_SPEED: 0.06,     // 👈 ANTES 0.2 → ahora gira MUCHO más lento
+
+    CAMERA_DISTANCE: 170,     // 👈 ANTES 140 → cámara un poco más atrás para ver toda la galaxia
+
+    ALLOW_REPEATS: true
+
+};
+
+        // ============================================================
+        // 🖼️ IMÁGENES
+        // ============================================================
+
+        const IMAGE_LIST = [
+
+            '../imagenes/imagen1.png',
+            '../imagenes/imagen2.png',
+            '../imagenes/imagen3.png',
+            '../imagenes/imagen4.png',
+            '../imagenes/imagen5.png',
+            '../imagenes/imagen6.png',
+            '../imagenes/imagen7.png',
+            '../imagenes/imagen15.png',
+            '../imagenes/imagen9.png',
+            '../imagenes/imagen10.png',
+            '../imagenes/imagen11.png',
+            '../imagenes/imagen12.png',
+            '../imagenes/imagen13.png',
+            '../imagenes/imagen14.png'
+
+
+        ];
+
+
+        // ============================================================
+        // ✅ COLOR SIN TINTE
+        // ============================================================
+        // Antes había un array COLORS con colores aleatorios que
+        // teñían las imágenes. Ahora usamos solo blanco puro, lo cual
+        // en Three.js significa: "no modifiques la textura original".
+        // ============================================================
+
+        const COLOR_SIN_TINTE = 0xffffff;
+
+
+        // ============================================================
+        // ESCENA
+        // ============================================================
+
+        const scene = new THREE.Scene();
+
+        scene.fog =
+            new THREE.FogExp2(
+                0x050510,
+                0.0035
+            );
+
+
+        // ============================================================
+        // CÁMARA
+        // ============================================================
+
+        const camera =
+            new THREE.PerspectiveCamera(
+
+                55,
+
+                window.innerWidth /
+                window.innerHeight,
+
+                0.1,
+
+                3000
+
+            );
+
+        camera.position.set(
+            0,
+            70,
+            CONFIG.CAMERA_DISTANCE
+        );
+
+        camera.lookAt(0, 0, 0);
+
+
+        // ============================================================
+        // RENDERER
+        // ============================================================
+
+        const renderer =
+            new THREE.WebGLRenderer({
+
+                antialias: true
+
+            });
+
+        renderer.setSize(
+            window.innerWidth,
+            window.innerHeight
+        );
+
+        renderer.setPixelRatio(
+            Math.min(
+                window.devicePixelRatio,
+                2
+            )
+        );
+
+        renderer.setClearColor(
+            0x050510,
+            1
+        );
+
+        document.body.appendChild(
+            renderer.domElement
+        );
+
+
+        // ============================================================
+        // CONTROLES
+        // ============================================================
+
+        const controls =
+            new OrbitControls(
+                camera,
+                renderer.domElement
+            );
+
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.06;
+        controls.rotateSpeed = 0.6;
+
+        // Velocidad de zoom conservada
+        controls.zoomSpeed = 10.0;
+
+        controls.enablePan = false;
+
+        controls.minDistance = 40;
+
+        controls.maxDistance = 400;
+
+        controls.minPolarAngle = 0.05;
+
+        controls.maxPolarAngle =
+            Math.PI - 0.05;
+
+
+        // ============================================================
+        // ILUMINACIÓN
+        // ============================================================
+        // Nota: los SpriteMaterial NO son afectados por luces, así que
+        // estas luces no tiñen las imágenes. Se dejan igual porque
+        // afectan al núcleo galáctico y otros elementos.
+        // ============================================================
+
+        scene.add(
+            new THREE.AmbientLight(
+                0x8866ff,
+                0.6
+            )
+        );
+
+
+        const coreLight =
+            new THREE.PointLight(
+                0xffcc88,
+                3,
+                250,
+                2
+            );
+
+        coreLight.position.set(
+            0,
+            0,
+            0
+        );
+
+        scene.add(coreLight);
+
+
+        const fillLight =
+            new THREE.DirectionalLight(
+                0x9a7bff,
+                0.5
+            );
+
+        fillLight.position.set(
+            0,
+            100,
+            50
+        );
+
+        scene.add(fillLight);
+
+
+        // ============================================================
+        // NÚCLEO GALÁCTICO
+        // ============================================================
+
+        const coreGroup =
+            new THREE.Group();
+
+        scene.add(coreGroup);
+
+
+        const coreInner =
+            new THREE.Mesh(
+
+                new THREE.SphereGeometry(
+                    3.2,
+                    32,
+                    32
+                ),
+
+                new THREE.MeshBasicMaterial({
+
+                    color: 0xfff0c0
+
+                })
+
+            );
+
+        coreGroup.add(coreInner);
+
+
+        for (let i = 0; i < 4; i++) {
+
+            const r =
+                5 + i * 3.5;
+
+            const halo =
+                new THREE.Mesh(
+
+                    new THREE.SphereGeometry(
+                        r,
+                        32,
+                        32
+                    ),
+
+                    new THREE.MeshBasicMaterial({
+
+                        color:
+                            i % 2 === 0
+                                ? 0xffaa66
+                                : 0xaa77ff,
+
+                        transparent: true,
+
+                        opacity:
+                            0.13 -
+                            i * 0.025,
+
+                        blending:
+                            THREE.AdditiveBlending,
+
+                        depthWrite: false
+
+                    })
+
+                );
+
+            coreGroup.add(halo);
+
+        }
+
+
+        // ============================================================
+        // TEXTURA DEL RESPLANDOR
+        // ============================================================
+
+        function makeGlowTexture() {
+
+            const size = 256;
+
+            const c =
+                document.createElement('canvas');
+
+            c.width = size;
+
+            c.height = size;
+
+            const g =
+                c.getContext('2d');
+
+            const grad =
+                g.createRadialGradient(
+
+                    size / 2,
+                    size / 2,
+                    0,
+
+                    size / 2,
+                    size / 2,
+                    size / 2
+
+                );
+
+            grad.addColorStop(
+                0,
+                'rgba(255,240,200,1)'
+            );
+
+            grad.addColorStop(
+                0.25,
+                'rgba(255,180,120,0.75)'
+            );
+
+            grad.addColorStop(
+                0.55,
+                'rgba(160,90,255,0.28)'
+            );
+
+            grad.addColorStop(
+                1,
+                'rgba(60,20,120,0)'
+            );
+
+            g.fillStyle = grad;
+
+            g.fillRect(
+                0,
+                0,
+                size,
+                size
+            );
+
+            return new THREE.CanvasTexture(c);
+
+        }
+
+
+        const glowSprite =
+            new THREE.Sprite(
+
+                new THREE.SpriteMaterial({
+
+                    map: makeGlowTexture(),
+
+                    blending:
+                        THREE.AdditiveBlending,
+
+                    depthWrite: false,
+
+                    transparent: true,
+
+                    opacity: 0.95
+
+                })
+
+            );
+
+        glowSprite.scale.set(
+            55,
+            55,
+            1
+        );
+
+        coreGroup.add(
+            glowSprite
+        );
+
+
+        // ============================================================
+        // CARGA DE TEXTURAS
+        // ============================================================
+
+        const loader =
+            new THREE.TextureLoader();
+
+        const loadedTextures = [];
+
+        let texturesLoaded = 0;
+
+
+        function loadTextures() {
+
+            return new Promise(
+                (resolve) => {
+
+                    if (
+                        IMAGE_LIST.length === 0
+                    ) {
+
+                        console.warn(
+                            '⚠️ No hay imágenes en IMAGE_LIST'
+                        );
+
+                        resolve();
+
+                        return;
+                    }
+
+
+                    let resuelto = false;
+
+                    // Timeout de seguridad: si en 5s no terminó, arrancamos igual
+                    const timeoutSeguridad =
+                        setTimeout(
+                            () => {
+
+                                if (!resuelto) {
+
+                                    resuelto = true;
+
+                                    console.warn(
+                                        `⚠️ Timeout: solo se cargaron ${loadedTextures.length} de ${IMAGE_LIST.length} imágenes`
+                                    );
+
+                                    resolve();
+
+                                }
+
+                            },
+                            5000
+                        );
+
+
+                    IMAGE_LIST.forEach(
+                        (path) => {
+
+                            loader.load(
+
+                                path,
+
+                                (texture) => {
+
+                                    texture.colorSpace =
+                                        THREE.SRGBColorSpace;
+
+                                    texture.minFilter =
+                                        THREE.LinearFilter;
+
+                                    texture.magFilter =
+                                        THREE.LinearFilter;
+
+                                    texture.generateMipmaps =
+                                        false;
+
+
+                                    const aspect =
+                                        texture.image.width /
+                                        texture.image.height;
+
+
+                                    loadedTextures.push({
+
+                                        texture,
+                                        aspect,
+                                        path
+
+                                    });
+
+
+                                    texturesLoaded++;
+
+
+                                    if (
+                                        texturesLoaded ===
+                                        IMAGE_LIST.length &&
+                                        !resuelto
+                                    ) {
+
+                                        resuelto = true;
+
+                                        clearTimeout(timeoutSeguridad);
+
+                                        resolve();
+
+                                    }
+
+                                },
+
+
+                                undefined,
+
+
+                                (err) => {
+
+                                    console.error(
+                                        `❌ No se pudo cargar: ${path}`,
+                                        err
+                                    );
+
+                                    texturesLoaded++;
+
+
+                                    if (
+                                        texturesLoaded ===
+                                        IMAGE_LIST.length &&
+                                        !resuelto
+                                    ) {
+
+                                        resuelto = true;
+
+                                        clearTimeout(timeoutSeguridad);
+
+                                        resolve();
+
+                                    }
+
+                                }
+
+                            );
+
+                        }
+
+                    );
+
+                }
+
+            );
+
+        }
+
+
+        // ============================================================
+        // GALAXIA
+        // ============================================================
+
+        const galaxyGroup =
+            new THREE.Group();
+
+        galaxyGroup.rotation.x =
+            THREE.MathUtils.degToRad(-12);
+
+        scene.add(galaxyGroup);
+
+
+        const stickers = [];
+
+
+        function pickTexture(index) {
+
+            if (
+                loadedTextures.length === 0
+            ) {
+
+                return null;
+
+            }
+
+
+            if (
+                CONFIG.ALLOW_REPEATS
+            ) {
+
+                return loadedTextures[
+                    Math.floor(
+                        Math.random() *
+                        loadedTextures.length
+                    )
+                ];
+
+            }
+
+
+            return loadedTextures[
+                index %
+                loadedTextures.length
+            ];
+
+        }
+
+
+        function generateGalaxy() {
+
+            const N =
+                CONFIG.STICKER_COUNT;
+
+
+            for (
+                let i = 0;
+                i < N;
+                i++
+            ) {
+
+                const texData =
+                    pickTexture(i);
+
+
+                if (!texData) {
+
+                    continue;
+
+                }
+
+
+                // ----------------------------------------------------
+                // DISTRIBUCIÓN ESPIRAL
+                // ----------------------------------------------------
+
+                const rFactor =
+                    Math.pow(
+                        Math.random(),
+                        0.15
+                    );
+
+
+                const distance =
+                    CONFIG.CORE_RADIUS +
+                    rFactor *
+                    (
+                        CONFIG.GALAXY_RADIUS -
+                        CONFIG.CORE_RADIUS
+                    );
+
+
+                const spiralFactor =
+                    (
+                        distance -
+                        CONFIG.CORE_RADIUS
+                    ) /
+                    (
+                        CONFIG.GALAXY_RADIUS -
+                        CONFIG.CORE_RADIUS
+                    );
+
+
+                const spiralAngle =
+                    spiralFactor *
+                    CONFIG.SPIRAL_TURNS *
+                    Math.PI *
+                    2;
+
+
+                const armOffset =
+                    (i % 2) *
+                    Math.PI;
+
+
+                const randomJitter =
+                    (
+                        Math.random() -
+                        0.5
+                    ) *
+                    0.15;
+
+
+                const baseAngle =
+                    spiralAngle +
+                    armOffset +
+                    randomJitter;
+
+
+                // ----------------------------------------------------
+                // GROSOR
+                // ----------------------------------------------------
+
+                const thickness =
+                    CONFIG.DISK_THICKNESS *
+                    (
+                        0.25 +
+                        rFactor * 0.9
+                    );
+
+
+                const y =
+                    (
+                        Math.random() -
+                        0.5
+                    ) *
+                    thickness;
+
+
+                // ----------------------------------------------------
+                // MATERIAL — SIN TINTE ✅
+                // color: 0xffffff = blanco puro = respeta la textura
+                // ----------------------------------------------------
+
+                const material =
+                    new THREE.SpriteMaterial({
+
+                        map:
+                            texData.texture,
+
+                        color:
+                            COLOR_SIN_TINTE,
+
+                        transparent:
+                            true,
+
+                        depthWrite:
+                            false,
+
+                        blending:
+                            THREE.NormalBlending,
+
+                        opacity:
+                            0.95
+
+                    });
+
+
+                const sprite =
+                    new THREE.Sprite(
+                        material
+                    );
+
+
+                // ----------------------------------------------------
+                // TAMAÑO
+                // ----------------------------------------------------
+
+                const baseSize =
+                    4 +
+                    Math.random() *
+                    4;
+
+
+                const sizeFactor =
+                    1.0 -
+                    rFactor * 0.5;
+
+
+                const size =
+                    Math.max(
+                        2,
+                        baseSize *
+                        sizeFactor
+                    );
+
+
+                const scaleX =
+                    size *
+                    (
+                        texData.aspect > 1
+                            ? texData.aspect
+                            : 1
+                    );
+
+
+                const scaleY =
+                    size *
+                    (
+                        texData.aspect < 1
+                            ? 1 / texData.aspect
+                            : 1
+                    );
+
+
+                sprite.scale.set(
+                    scaleX,
+                    scaleY,
+                    1
+                );
+
+
+                // ----------------------------------------------------
+                // POSICIÓN
+                // ----------------------------------------------------
+
+                const x0 =
+                    Math.cos(baseAngle) *
+                    distance;
+
+
+                const z0 =
+                    Math.sin(baseAngle) *
+                    distance;
+
+
+                sprite.position.set(
+                    x0,
+                    y,
+                    z0
+                );
+
+
+                galaxyGroup.add(
+                    sprite
+                );
+
+
+                // ----------------------------------------------------
+                // VELOCIDAD
+                // ----------------------------------------------------
+
+                const angularSpeed =
+                    CONFIG.ROTATION_SPEED *
+                    (
+                        1 +
+                        25 /
+                        (
+                            distance +
+                            8
+                        )
+                    );
+
+
+                stickers.push({
+
+                    sprite,
+
+                    distance,
+
+                    baseAngle,
+
+                    angularSpeed,
+
+                    y,
+
+                    selfRotation:
+                        (
+                            Math.random() -
+                            0.5
+                        ) *
+                        0.4,
+
+                    selfRotationSpeed:
+                        (
+                            Math.random() -
+                            0.5
+                        ) *
+                        0.3,
+
+                    twinklePhase:
+                        Math.random() *
+                        Math.PI *
+                        2,
+
+                    twinkleSpeed:
+                        1 +
+                        Math.random() *
+                        2,
+
+                    baseScaleX:
+                        scaleX,
+
+                    baseScaleY:
+                        scaleY
+
+                });
+
+            }
+
+        }
+
+
+        // ============================================================
+        // ⭐ ESTRELLAS
+        // ============================================================
+
+        function createStars() {
+
+            const starCount =
+                2000;
+
+
+            const starGeo =
+                new THREE.BufferGeometry();
+
+
+            const starPositions =
+                new Float32Array(
+                    starCount * 3
+                );
+
+
+            const starColors =
+                new Float32Array(
+                    starCount * 3
+                );
+
+
+            for (
+                let i = 0;
+                i < starCount;
+                i++
+            ) {
+
+                const r =
+                    200 +
+                    Math.random() *
+                    900;
+
+
+                const theta =
+                    Math.random() *
+                    Math.PI *
+                    2;
+
+
+                const phi =
+                    Math.acos(
+                        2 *
+                        Math.random() -
+                        1
+                    );
+
+
+                starPositions[i * 3] =
+                    r *
+                    Math.sin(phi) *
+                    Math.cos(theta);
+
+
+                starPositions[i * 3 + 1] =
+                    r *
+                    Math.cos(phi) *
+                    0.6;
+
+
+                starPositions[i * 3 + 2] =
+                    r *
+                    Math.sin(phi) *
+                    Math.sin(theta);
+
+
+                const c =
+                    new THREE.Color()
+                        .setHSL(
+
+                            0.6 +
+                            Math.random() *
+                            0.15,
+
+                            0.4 +
+                            Math.random() *
+                            0.4,
+
+                            0.7 +
+                            Math.random() *
+                            0.3
+
+                        );
+
+
+                starColors[i * 3] =
+                    c.r;
+
+                starColors[i * 3 + 1] =
+                    c.g;
+
+                starColors[i * 3 + 2] =
+                    c.b;
+
+            }
+
+
+            starGeo.setAttribute(
+
+                'position',
+
+                new THREE.BufferAttribute(
+                    starPositions,
+                    3
+                )
+
+            );
+
+
+            starGeo.setAttribute(
+
+                'color',
+
+                new THREE.BufferAttribute(
+                    starColors,
+                    3
+                )
+
+            );
+
+
+            const starMat =
+                new THREE.PointsMaterial({
+
+                    size: 1.4,
+
+                    sizeAttenuation: true,
+
+                    vertexColors: true,
+
+                    transparent: true,
+
+                    opacity: 0.85,
+
+                    depthWrite: false,
+
+                    blending:
+                        THREE.AdditiveBlending
+
+                });
+
+
+            return new THREE.Points(
+                starGeo,
+                starMat
+            );
+
+        }
+
+
+        const stars =
+            createStars();
+
+        scene.add(stars);
+
+
+        // ============================================================
+        // ☄️ METEORITOS
+        // ============================================================
+
+        const meteors = [];
+
+        const METEOR_COUNT = 6;
+
+
+        function createMeteor() {
+
+            const coreGeo =
+                new THREE.SphereGeometry(
+                    0.7,
+                    10,
+                    10
+                );
+
+
+            const coreMat =
+                new THREE.MeshBasicMaterial({
+
+                    color: 0xffffff,
+
+                    transparent: true,
+
+                    opacity: 1
+
+                });
+
+
+            const core =
+                new THREE.Mesh(
+                    coreGeo,
+                    coreMat
+                );
+
+
+            const haloGeo =
+                new THREE.SphereGeometry(
+                    1.5,
+                    16,
+                    16
+                );
+
+
+            const haloMat =
+                new THREE.MeshBasicMaterial({
+
+                    color: 0xffffff,
+
+                    transparent: true,
+
+                    opacity: 0.18,
+
+                    blending:
+                        THREE.AdditiveBlending,
+
+                    depthWrite: false
+
+                });
+
+
+            const halo =
+                new THREE.Mesh(
+                    haloGeo,
+                    haloMat
+                );
+
+
+            const trailLength = 35;
+
+
+            const trailGeo =
+                new THREE.BufferGeometry();
+
+
+            const positions =
+                new Float32Array(
+                    trailLength * 3
+                );
+
+
+            trailGeo.setAttribute(
+
+                'position',
+
+                new THREE.BufferAttribute(
+                    positions,
+                    3
+                )
+
+            );
+
+
+            const trailMat =
+                new THREE.LineBasicMaterial({
+
+                    color: 0xffffff,
+
+                    transparent: true,
+
+                    opacity: 0.85,
+
+                    blending:
+                        THREE.AdditiveBlending,
+
+                    depthWrite: false
+
+                });
+
+
+            const trail =
+                new THREE.Line(
+                    trailGeo,
+                    trailMat
+                );
+
+
+            const group =
+                new THREE.Group();
+
+
+            group.add(core);
+            group.add(halo);
+            group.add(trail);
+
+
+            const startRadius =
+                180 +
+                Math.random() *
+                150;
+
+
+            const theta =
+                Math.random() *
+                Math.PI *
+                2;
+
+
+            const phi =
+                Math.acos(
+                    2 *
+                    Math.random() -
+                    1
+                );
+
+
+            const startPos =
+                new THREE.Vector3(
+
+                    startRadius *
+                    Math.sin(phi) *
+                    Math.cos(theta),
+
+                    startRadius *
+                    Math.cos(phi) *
+                    0.6,
+
+                    startRadius *
+                    Math.sin(phi) *
+                    Math.sin(theta)
+
+                );
+
+
+            const dir =
+                startPos
+                    .clone()
+                    .negate()
+                    .normalize();
+
+
+            dir.x +=
+                (
+                    Math.random() -
+                    0.5
+                ) *
+                0.6;
+
+
+            dir.y +=
+                (
+                    Math.random() -
+                    0.5
+                ) *
+                0.6;
+
+
+            dir.z +=
+                (
+                    Math.random() -
+                    0.5
+                ) *
+                0.6;
+
+
+            dir.normalize();
+
+
+            const speed =
+                60 +
+                Math.random() *
+                80;
+
+
+            group.position.copy(
+                startPos
+            );
+
+
+            return {
+
+                group,
+
+                core,
+
+                halo,
+
+                trail,
+
+                positions,
+
+                trailLength,
+
+                velocity:
+                    dir.multiplyScalar(
+                        speed
+                    ),
+
+                life: 0,
+
+                maxLife:
+                    6 +
+                    Math.random() *
+                    4,
+
+                active: true
+
+            };
+
+        }
+
+
+        function spawnMeteor() {
+
+            const m =
+                createMeteor();
+
+            scene.add(
+                m.group
+            );
+
+            meteors.push(m);
+
+        }
+
+
+        for (
+            let i = 0;
+            i < METEOR_COUNT;
+            i++
+        ) {
+
+            spawnMeteor();
+
+        }
+
+
+        // ============================================================
+        // 🌠 ESTELAS DE ESTRELLAS
+        // ============================================================
+
+        function createStarTrails() {
+
+            const trailGroup =
+                new THREE.Group();
+
+            const trailCount =
+                120;
+
+
+            for (
+                let i = 0;
+                i < trailCount;
+                i++
+            ) {
+
+                const r =
+                    300 +
+                    Math.random() *
+                    700;
+
+
+                const theta =
+                    Math.random() *
+                    Math.PI *
+                    2;
+
+
+                const phi =
+                    Math.acos(
+                        2 *
+                        Math.random() -
+                        1
+                    );
+
+
+                const x =
+                    r *
+                    Math.sin(phi) *
+                    Math.cos(theta);
+
+
+                const y =
+                    r *
+                    Math.cos(phi) *
+                    0.5;
+
+
+                const z =
+                    r *
+                    Math.sin(phi) *
+                    Math.sin(theta);
+
+
+                const length =
+                    8 +
+                    Math.random() *
+                    25;
+
+
+                const dirX =
+                    Math.random() -
+                    0.5;
+
+
+                const dirY =
+                    Math.random() -
+                    0.5;
+
+
+                const dirZ =
+                    Math.random() -
+                    0.5;
+
+
+                const dirLen =
+                    Math.hypot(
+                        dirX,
+                        dirY,
+                        dirZ
+                    ) || 1;
+
+
+                const points = [
+
+                    new THREE.Vector3(
+                        x,
+                        y,
+                        z
+                    ),
+
+                    new THREE.Vector3(
+
+                        x +
+                        (
+                            dirX /
+                            dirLen
+                        ) *
+                        length,
+
+                        y +
+                        (
+                            dirY /
+                            dirLen
+                        ) *
+                        length,
+
+                        z +
+                        (
+                            dirZ /
+                            dirLen
+                        ) *
+                        length
+
+                    )
+
+                ];
+
+
+                const geometry =
+                    new THREE.BufferGeometry()
+                        .setFromPoints(
+                            points
+                        );
+
+
+                const hue =
+                    0.55 +
+                    Math.random() *
+                    0.15;
+
+
+                const color =
+                    new THREE.Color()
+                        .setHSL(
+
+                            hue,
+
+                            0.6,
+
+                            0.75 +
+                            Math.random() *
+                            0.2
+
+                        );
+
+
+                const material =
+                    new THREE.LineBasicMaterial({
+
+                        color,
+
+                        transparent: true,
+
+                        opacity:
+                            0.25 +
+                            Math.random() *
+                            0.4,
+
+                        blending:
+                            THREE.AdditiveBlending,
+
+                        depthWrite: false
+
+                    });
+
+
+                const line =
+                    new THREE.Line(
+                        geometry,
+                        material
+                    );
+
+
+                trailGroup.add(
+                    line
+                );
+
+
+                line.userData.speed =
+                    (
+                        Math.random() -
+                        0.5
+                    ) *
+                    0.02;
+
+
+                line.userData.twinklePhase =
+                    Math.random() *
+                    Math.PI *
+                    2;
+
+
+                line.userData.twinkleSpeed =
+                    0.5 +
+                    Math.random() *
+                    1.5;
+
+
+                line.userData.baseOpacity =
+                    material.opacity;
+
+            }
+
+
+            return trailGroup;
+
+        }
+
+
+        const starTrails =
+            createStarTrails();
+
+        scene.add(
+            starTrails
+        );
+
+
+        // ============================================================
+        // 🌌 POLVO ESPACIAL
+        // ============================================================
+
+        function createDust() {
+
+            const dustCount =
+                3000;
+
+
+            const dustGeo =
+                new THREE.BufferGeometry();
+
+
+            const dustPositions =
+                new Float32Array(
+                    dustCount * 3
+                );
+
+
+            for (
+                let i = 0;
+                i < dustCount;
+                i++
+            ) {
+
+                const r =
+                    30 +
+                    Math.random() *
+                    250;
+
+
+                const theta =
+                    Math.random() *
+                    Math.PI *
+                    2;
+
+
+                const phi =
+                    Math.acos(
+                        2 *
+                        Math.random() -
+                        1
+                    );
+
+
+                dustPositions[i * 3] =
+                    r *
+                    Math.sin(phi) *
+                    Math.cos(theta);
+
+
+                dustPositions[i * 3 + 1] =
+                    r *
+                    Math.cos(phi) *
+                    0.25;
+
+
+                dustPositions[i * 3 + 2] =
+                    r *
+                    Math.sin(phi) *
+                    Math.sin(theta);
+
+            }
+
+
+            dustGeo.setAttribute(
+
+                'position',
+
+                new THREE.BufferAttribute(
+                    dustPositions,
+                    3
+                )
+
+            );
+
+
+            const dustMat =
+                new THREE.PointsMaterial({
+
+                    size: 0.6,
+
+                    color: 0xbbaaff,
+
+                    transparent: true,
+
+                    opacity: 0.45,
+
+                    depthWrite: false,
+
+                    blending:
+                        THREE.AdditiveBlending,
+
+                    sizeAttenuation: true
+
+                });
+
+
+            return new THREE.Points(
+                dustGeo,
+                dustMat
+            );
+
+        }
+
+
+        const dust =
+            createDust();
+
+        galaxyGroup.add(
+            dust
+        );
+
+
+        // ============================================================
+        // 🎬 ANIMACIÓN
+        // ============================================================
+
+        const clock =
+            new THREE.Clock();
+
+
+        let elapsed = 0;
+
+
+        function animate() {
+
+            requestAnimationFrame(
+                animate
+            );
+
+
+            const dt =
+                Math.min(
+                    clock.getDelta(),
+                    0.05
+                );
+
+
+            elapsed += dt;
+
+
+            // --------------------------------------------------------
+            // IMÁGENES
+            // --------------------------------------------------------
+
+            for (
+                let i = 0;
+                i < stickers.length;
+                i++
+            ) {
+
+                const s =
+                    stickers[i];
+
+
+                const angle =
+                    s.baseAngle +
+                    elapsed *
+                    s.angularSpeed;
+
+
+                const x =
+                    Math.cos(angle) *
+                    s.distance;
+
+
+                const z =
+                    Math.sin(angle) *
+                    s.distance;
+
+
+                s.sprite.position.set(
+                    x,
+                    s.y,
+                    z
+                );
+
+
+                s.selfRotation +=
+                    s.selfRotationSpeed *
+                    dt;
+
+
+                s.sprite.material.rotation =
+                    s.selfRotation;
+
+
+                const twinkle =
+                    0.8 +
+                    Math.sin(
+                        elapsed *
+                        s.twinkleSpeed +
+                        s.twinklePhase
+                    ) *
+                    0.2;
+
+
+                s.sprite.material.opacity =
+                    twinkle;
+
+
+                const pulse =
+                    0.97 +
+                    Math.sin(
+                        elapsed *
+                        s.twinkleSpeed *
+                        1.3 +
+                        s.twinklePhase
+                    ) *
+                    0.03;
+
+
+                s.sprite.scale.set(
+
+                    s.baseScaleX *
+                    pulse,
+
+                    s.baseScaleY *
+                    pulse,
+
+                    1
+
+                );
+
+            }
+
+
+            // --------------------------------------------------------
+            // NÚCLEO
+            // --------------------------------------------------------
+
+            coreGroup.rotation.y +=
+                dt *
+                0.15;
+
+
+            coreLight.intensity =
+                2.5 +
+                Math.sin(
+                    elapsed *
+                    1.5
+                ) *
+                0.6;
+
+
+            // --------------------------------------------------------
+            // ESTRELLAS
+            // --------------------------------------------------------
+
+            stars.rotation.y +=
+                dt *
+                0.005;
+
+
+            stars.rotation.x +=
+                dt *
+                0.0015;
+
+
+            // --------------------------------------------------------
+            // POLVO
+            // --------------------------------------------------------
+
+            dust.rotation.y +=
+                dt *
+                0.08;
+
+
+            // --------------------------------------------------------
+            // ESTELAS
+            // --------------------------------------------------------
+
+            starTrails.rotation.y +=
+                dt *
+                0.02;
+
+
+            starTrails.rotation.x +=
+                dt *
+                0.008;
+
+
+            starTrails.children.forEach(
+                line => {
+
+                    const t =
+                        Math.sin(
+
+                            elapsed *
+                            line.userData.twinkleSpeed +
+
+                            line.userData.twinklePhase
+
+                        );
+
+
+                    line.material.opacity =
+                        line.userData.baseOpacity *
+                        (
+                            0.6 +
+                            t *
+                            0.4
+                        );
+
+                }
+            );
+
+
+            // --------------------------------------------------------
+            // METEORITOS
+            // --------------------------------------------------------
+
+            for (
+                let i = meteors.length - 1;
+                i >= 0;
+                i--
+            ) {
+
+                const m =
+                    meteors[i];
+
+
+                m.group.position.addScaledVector(
+                    m.velocity,
+                    dt
+                );
+
+
+                m.life += dt;
+
+
+                const pos =
+                    m.group.position;
+
+
+                const tail =
+                    m.velocity
+                        .clone()
+                        .normalize()
+                        .multiplyScalar(-1);
+
+
+                const tailLen = 8;
+
+
+                for (
+                    let j = 0;
+                    j < m.trailLength;
+                    j++
+                ) {
+
+                    const f =
+                        j /
+                        (
+                            m.trailLength -
+                            1
+                        );
+
+
+                    const px =
+                        pos.x +
+                        tail.x *
+                        tailLen *
+                        f;
+
+
+                    const py =
+                        pos.y +
+                        tail.y *
+                        tailLen *
+                        f;
+
+
+                    const pz =
+                        pos.z +
+                        tail.z *
+                        tailLen *
+                        f;
+
+
+                    m.positions[j * 3] =
+                        px;
+
+
+                    m.positions[j * 3 + 1] =
+                        py;
+
+
+                    m.positions[j * 3 + 2] =
+                        pz;
+
+                }
+
+
+                m.trail.geometry
+                    .attributes
+                    .position
+                    .needsUpdate = true;
+
+
+                const fade =
+                    Math.max(
+                        0,
+                        1 -
+                        m.life /
+                        m.maxLife
+                    );
+
+
+                m.core.material.opacity =
+                    fade;
+
+
+                m.halo.material.opacity =
+                    fade *
+                    0.18;
+
+
+                m.trail.material.opacity =
+                    fade *
+                    0.85;
+
+
+                const flicker =
+                    0.8 +
+                    Math.sin(
+                        m.life *
+                        30
+                    ) *
+                    0.2;
+
+
+                m.core.scale.setScalar(
+                    flicker
+                );
+
+
+                if (
+                    m.life >
+                    m.maxLife
+                ) {
+
+                    scene.remove(
+                        m.group
+                    );
+
+
+                    m.core.geometry.dispose();
+                    m.core.material.dispose();
+
+                    m.halo.geometry.dispose();
+                    m.halo.material.dispose();
+
+                    m.trail.geometry.dispose();
+                    m.trail.material.dispose();
+
+
+                    meteors.splice(
+                        i,
+                        1
+                    );
+
+
+                    spawnMeteor();
+
+                }
+
+            }
+
+
+            // --------------------------------------------------------
+            // CONTROLES Y RENDER
+            // --------------------------------------------------------
+
+            controls.update();
+
+            renderer.render(
+                scene,
+                camera
+            );
+
+        }
+
+
+        // ============================================================
+        // 📱 RESIZE
+        // ============================================================
+
+        window.addEventListener(
+            'resize',
+            () => {
+
+                camera.aspect =
+                    window.innerWidth /
+                    window.innerHeight;
+
+
+                camera.updateProjectionMatrix();
+
+
+                renderer.setSize(
+                    window.innerWidth,
+                    window.innerHeight
+                );
+
+
+                renderer.setPixelRatio(
+                    Math.min(
+                        window.devicePixelRatio,
+                        2
+                    )
+                );
+
+            }
+        );
+
+
+        // ============================================================
+        // 🚀 INICIO
+        // ============================================================
+
+        async function start() {
+
+            await loadTextures();
+
+
+            if (
+                loadedTextures.length === 0
+            ) {
+
+                console.warn(
+                    '⚠️ No se cargó ninguna imagen. Revisa las rutas en IMAGE_LIST.'
+                );
+
+            }
+
+
+            generateGalaxy();
+
+
+            const loaderEl =
+                document.getElementById(
+                    'loader'
+                );
+
+
+            loaderEl.classList.add(
+                'hidden'
+            );
+
+
+            setTimeout(
+                () => {
+
+                    loaderEl.remove();
+
+                },
+                900
+            );
+
+
+            animate();
+
+        }
+
+
+        start();
+
+    </script>
+
+    <script src="../js/musica.js"></script>
+    <script>
+        iniciarMusica();
+    </script>
+
+</body>
+
+</html>

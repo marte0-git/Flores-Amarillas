@@ -1,0 +1,829 @@
+/* ============================================================
+   RESET Y BASE
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+    width: 100%;
+    min-height: 100vh;
+    font-family: 'Cormorant Garamond', serif;
+    overflow-x: hidden;
+}
+
+body {
+    background: radial-gradient(ellipse at 50% 40%, #fff9ee 0%, #fdf3d8 35%, #f8e9c0 60%, #f3ddb0 100%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 45%, rgba(200, 160, 90, 0.10) 100%);
+    z-index: 1;
+}
+
+/* ============================================================
+   POLEN
+   ============================================================ */
+#polenCanvas {
+    position: fixed;
+    inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* ============================================================
+   ESCENARIO
+   ============================================================ */
+.escenario {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================================================
+   VISTA 1 · FORMULARIO
+   ============================================================ */
+.form-carta {
+    position: relative;
+    width: 100%;
+    background: #FFFDF8;
+    border-radius: 26px;
+    border: 1.5px solid transparent;
+    background-image:
+        linear-gradient(#FFFDF8, #FFFDF8),
+        linear-gradient(135deg, #F7B7C4 0%, #F5D76E 45%, #A8DDB5 100%);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+
+    box-shadow:
+        0 28px 70px rgba(200, 150, 90, 0.22),
+        0 8px 24px rgba(200, 150, 90, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+    padding: 54px 44px 46px;
+    text-align: center;
+
+    animation: cartaEntra 0.9s cubic-bezier(.22,.9,.3,1) both;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+@keyframes cartaEntra {
+    from { opacity: 0; transform: translateY(30px) scale(0.94); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.form-carta.saliendo {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+    pointer-events: none;
+}
+/* ============================================================
+   FLOR DEL FORMULARIO — rectángulo vertical, responsiva
+   ============================================================ */
+.form-flor {
+    /* Tamaño responsivo: mínimo 130px, ideal 28vw, máximo 200px */
+    width: clamp(130px, 28vw, 200px);
+
+    /* Proporción vertical tipo retrato (3:4) */
+    aspect-ratio: 3 / 4;
+    height: auto;
+    max-height: 34vh;
+
+    object-fit: cover;
+
+    /* Marco rectangular elegante */
+    border-radius: 16px;
+    border: 4px solid #FFFDF8;
+    box-shadow:
+        0 14px 34px rgba(200, 150, 90, 0.28),
+        0 4px 12px rgba(200, 150, 90, 0.15),
+        0 0 0 2px #E8D9A8;
+
+    margin-bottom: 22px;
+
+    filter: drop-shadow(0 6px 16px rgba(230, 180, 80, 0.20));
+    animation: florFlota 3.5s ease-in-out infinite;
+    transition: transform 0.35s cubic-bezier(.34,1.56,.64,1);
+}
+
+.form-flor:hover {
+    transform: scale(1.03);
+}
+
+@keyframes florFlota {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-6px); }
+}
+
+.form-titulo {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: clamp(1.3rem, 3.6vw, 1.7rem);
+    color: #6b4a2b;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.form-texto {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 2.3vw, 1.12rem);
+    color: #8a7a63;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    padding: 0 10px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 16px 22px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    color: #6b4a2b;
+    background: #FFFCF5;
+    border: 1.5px solid rgba(230, 180, 80, 0.35);
+    border-radius: 999px;
+    outline: none;
+    text-align: center;
+    letter-spacing: 0.5px;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    margin-bottom: 22px;
+}
+
+.form-input::placeholder {
+    color: #b9aa93;
+    font-style: italic;
+}
+
+.form-input:focus {
+    border-color: rgba(240, 168, 40, 0.85);
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(247, 183, 51, 0.15);
+}
+
+.btn-generar {
+    width: 100%;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: clamp(1rem, 2.4vw, 1.15rem);
+    color: #ffffff;
+
+    background: linear-gradient(180deg, #f7b733 0%, #f0a017 100%);
+    border: none;
+    border-radius: 999px;
+    padding: 17px 42px;
+    cursor: pointer;
+    letter-spacing: 0.6px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    box-shadow:
+        0 8px 24px rgba(240, 160, 23, 0.45),
+        0 2px 6px rgba(240, 160, 23, 0.30),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+
+    transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+}
+
+.btn-generar .btn-emoji {
+    font-size: 1.1em;
+}
+
+.btn-generar:hover {
+    transform: translateY(-2px) scale(1.01);
+    filter: brightness(1.05);
+    box-shadow:
+        0 12px 30px rgba(240, 160, 23, 0.55),
+        0 4px 10px rgba(240, 160, 23, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.btn-generar:active {
+    transform: translateY(0) scale(0.99);
+}
+
+.btn-generar.error {
+    animation: shake 0.45s ease;
+}
+
+@keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%     { transform: translateX(-8px); }
+    40%     { transform: translateX(8px); }
+    60%     { transform: translateX(-5px); }
+    80%     { transform: translateX(5px); }
+}
+
+/* ============================================================
+   VISTA 2 · TICKET
+   ============================================================ */
+.ticket-wrapper {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+}
+
+.ticket-wrapper.visible {
+    display: flex;
+    animation: aparecerTicket 0.85s cubic-bezier(.22,.9,.3,1) both;
+}
+
+@keyframes aparecerTicket {
+    from { opacity: 0; transform: translateY(30px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.ticket {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    background: linear-gradient(180deg, #FFFEFA 0%, #FFFBEF 100%);
+    border-radius: 18px;
+    border: 1.5px solid #E8D9A8;
+    padding: 40px 36px 34px;
+
+    box-shadow:
+        0 24px 60px rgba(200, 150, 90, 0.22),
+        0 6px 18px rgba(200, 150, 90, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+    font-family: 'Cormorant Garamond', serif;
+    color: #6b4a2b;
+    text-align: center;
+}
+
+/* Marco punteado interno */
+.ticket::before {
+    content: "";
+    position: absolute;
+    inset: 10px;
+    border: 1.2px dashed #E8C976;
+    border-radius: 12px;
+    pointer-events: none;
+}
+
+/* Estrella decorativa superior */
+.ticket-estrella {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.6rem;
+    color: #E8B44A;
+    background: #FFFBEF;
+    padding: 0 10px;
+    z-index: 2;
+}
+
+/* Encabezado */
+.ticket-header {
+    margin-bottom: 26px;
+}
+
+.ticket-marca {
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    letter-spacing: 6px;
+    color: #b89455;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.ticket-nombre-marca {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: clamp(1.9rem, 5.5vw, 2.6rem);
+    letter-spacing: 6px;
+    color: #d4a02e;
+    text-transform: uppercase;
+    text-shadow: 0 1px 6px rgba(230, 180, 80, 0.20);
+}
+
+/* Imagen central */
+.ticket-flor-img {
+    display: flex;
+    justify-content: center;
+    margin: 6px 0 22px;
+}
+
+.ticket-flor-img img {
+    width: clamp(140px, 42vw, 260px);
+    aspect-ratio: 3 / 4;
+    height: auto;
+    max-height: 42vh;
+    object-fit: cover;
+
+    /* Marco tipo polaroid elegante */
+    border-radius: 16px;
+    border: 4px solid #FFFDF8;
+    box-shadow:
+        0 12px 28px rgba(200, 150, 90, 0.28),
+        0 4px 10px rgba(200, 150, 90, 0.15),
+        0 0 0 2px #E8D9A8;
+
+    filter: drop-shadow(0 6px 16px rgba(230, 180, 80, 0.20));
+    animation: florFlota 3.5s ease-in-out infinite;
+}
+
+/* Pertenencia */
+.ticket-pertenece {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: #a8977a;
+    margin-bottom: 6px;
+    letter-spacing: 0.4px;
+}
+
+.ticket-dueno {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 700;
+    font-size: clamp(2.2rem, 6.5vw, 3rem);
+    color: #6b4a2b;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+    line-height: 1.1;
+    word-break: break-word;
+}
+
+/* Info */
+.ticket-info {
+    border-top: 1px solid rgba(232, 217, 168, 0.7);
+    border-bottom: 1px solid rgba(232, 217, 168, 0.7);
+    padding: 18px 4px;
+    margin-bottom: 22px;
+}
+
+.ticket-fila {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.92rem;
+    letter-spacing: 1.5px;
+    color: #8a7a63;
+    padding: 4px 8px;
+    margin-bottom: 14px;
+}
+
+.ticket-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    letter-spacing: 3px;
+    color: #b89455;
+}
+
+.ticket-valor {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    color: #6b4a2b;
+    letter-spacing: 0.6px;
+}
+
+/* Frase central */
+.ticket-frase-central {
+    text-align: center;
+    padding: 6px 0 4px;
+}
+
+.ticket-ojitos {
+    font-family: 'Cinzel', serif;
+    font-size: 0.78rem;
+    letter-spacing: 5px;
+    color: #b89455;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.ticket-traviesa {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 600;
+    font-size: clamp(1.4rem, 4vw, 1.85rem);
+    color: #c99240;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 6px rgba(230, 180, 80, 0.20);
+}
+
+/* Frase final */
+.ticket-frase-final {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: #8a7a63;
+    line-height: 1.6;
+    letter-spacing: 0.4px;
+    margin-bottom: 18px;
+    padding: 0 6px;
+}
+
+/* Decoración inferior */
+.ticket-deco {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    font-size: 1.2rem;
+    color: #d4a02e;
+}
+
+.ticket-deco .brillo {
+    font-size: 0.95rem;
+    color: #E8B44A;
+}
+
+/* ============================================================
+   BOTÓN GUARDAR
+   ============================================================ */
+.btn-guardar {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: clamp(1rem, 2.4vw, 1.15rem);
+    color: #ffffff;
+
+    background: linear-gradient(180deg, #f7b733 0%, #f0a017 100%);
+    border: none;
+    border-radius: 999px;
+    padding: 17px 42px;
+    cursor: pointer;
+    letter-spacing: 0.6px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    box-shadow:
+        0 8px 24px rgba(240, 160, 23, 0.45),
+        0 2px 6px rgba(240, 160, 23, 0.30),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+
+    transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+}
+
+.btn-guardar:hover {
+    transform: translateY(-2px) scale(1.02);
+    filter: brightness(1.05);
+    box-shadow:
+        0 12px 30px rgba(240, 160, 23, 0.55),
+        0 4px 10px rgba(240, 160, 23, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.btn-guardar:active { transform: translateY(0) scale(0.99); }
+
+.btn-nota {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.88rem;
+    color: #a8977a;
+    letter-spacing: 0.3px;
+    margin-top: -8px;
+}
+
+/* ============================================================
+   SERPENTINAS
+   ============================================================ */
+.serpentinas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+    overflow: hidden;
+}
+
+.serpentina {
+    position: absolute;
+    top: -30px;
+    width: 10px;
+    height: 18px;
+    border-radius: 2px;
+    opacity: 0.95;
+    will-change: transform;
+    animation: caerSerpentina linear forwards;
+}
+
+@keyframes caerSerpentina {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% { opacity: 1; }
+    100% {
+        transform: translateY(110vh) translateX(var(--deriva, 0px)) rotate(var(--giro, 720deg));
+        opacity: 0.9;
+    }
+}
+
+/* ============================================================
+   TOAST "GUARDADO"
+   ============================================================ */
+.toast {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: linear-gradient(135deg, #f6c344 0%, #e8a517 60%, #c07a10 100%);
+    color: #4a2a08;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.6px;
+    padding: 14px 30px;
+    border-radius: 999px;
+    border: 1.5px solid rgba(255, 235, 180, 0.75);
+    box-shadow:
+        0 10px 26px rgba(160, 90, 10, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    z-index: 200;
+}
+
+.toast.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 600px) {
+    body { padding: 30px 16px; }
+    .form-carta { padding: 40px 26px 34px; border-radius: 22px; }
+
+    /* ✅ Form-flor responsiva, mínimo 110px visible */
+.form-flor {
+    width: clamp(120px, 48vw, 170px);
+    max-height: 30vh;
+    border-width: 3px;
+    border-radius: 14px;
+    margin-bottom: 18px;
+}
+
+    .form-input { padding: 14px 18px; font-size: 1rem; }
+    .btn-generar { padding: 14px 28px; font-size: 0.98rem; }
+
+    .ticket { padding: 32px 22px 28px; border-radius: 16px; }
+    .ticket::before { inset: 8px; }
+
+    /* ✅ Ticket-flor responsiva manteniendo el marco vertical */
+    .ticket-flor-img img {
+        width: clamp(140px, 55vw, 220px);
+        max-height: 38vh;
+        border-width: 3px;
+        border-radius: 12px;
+    }
+
+    .ticket-dueno { font-size: 2rem; }
+    .ticket-fila { font-size: 0.82rem; letter-spacing: 1px; padding: 3px 4px; }
+    .ticket-label { font-size: 0.65rem; letter-spacing: 2px; }
+    .ticket-ojitos { font-size: 0.7rem; letter-spacing: 4px; }
+    .ticket-traviesa { font-size: 1.4rem; }
+    .btn-guardar { padding: 14px 28px; font-size: 0.98rem; }
+
+ .despedida-flor {
+        width: clamp(120px, 50vw, 180px);
+        max-height: 32vh;
+        border-width: 3px;
+        border-radius: 14px;
+        margin-bottom: 20px;
+    }
+
+}
+
+/* ============================================================
+   BOTÓN "CERRAR EL JARDÍN"
+   Aparece solo después de guardar el ticket
+   ============================================================ */
+.btn-cerrar {
+    position: fixed;
+    top: 26px;
+    left: 26px;
+    z-index: 400;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 999px;
+
+    background: linear-gradient(135deg, #f6c344 0%, #e8a517 55%, #c07a10 100%);
+    color: #4a2a08;
+    border: 1.5px solid rgba(255, 235, 180, 0.75);
+
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.8px;
+    white-space: nowrap;
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 22px rgba(160, 90, 10, 0.45),
+        0 2px 6px rgba(0, 0, 0, 0.20),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45);
+
+    /* Oculto por defecto */
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+    pointer-events: none;
+    transition:
+        opacity 0.6s ease,
+        transform 0.6s cubic-bezier(.34,1.56,.64,1),
+        box-shadow 0.22s ease,
+        filter 0.22s ease;
+}
+
+.btn-cerrar.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.btn-cerrar .btn-cerrar-icon {
+    font-size: 1.1em;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.btn-cerrar:hover {
+    transform: translateY(-2px) scale(1.03);
+    filter: brightness(1.06);
+    box-shadow:
+        0 12px 28px rgba(160, 90, 10, 0.55),
+        0 4px 10px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.btn-cerrar:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow:
+        0 5px 14px rgba(160, 90, 10, 0.40),
+        inset 0 2px 5px rgba(90, 50, 5, 0.30);
+}
+
+.btn-cerrar:focus-visible {
+    outline: 3px solid rgba(255, 235, 150, 0.85);
+    outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+    .btn-cerrar {
+        top: 14px;
+        left: 14px;
+        padding: 9px 16px;
+        font-size: 0.82rem;
+        gap: 6px;
+    }
+}
+
+/* ============================================================
+   PANTALLA DE DESPEDIDA
+   ============================================================ */
+.despedida {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 20px;
+
+    background: radial-gradient(ellipse at 50% 40%, #fff9ee 0%, #fdf3d8 35%, #f8e9c0 60%, #f3ddb0 100%);
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.9s ease;
+}
+
+.despedida.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.despedida-contenido {
+    text-align: center;
+    max-width: 640px;
+    padding: 40px 24px;
+
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1s 0.3s ease, transform 1s 0.3s cubic-bezier(.22,.9,.3,1);
+}
+
+.despedida.visible .despedida-contenido {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ============================================================
+   FLOR DE DESPEDIDA — responsiva + con marco bonito
+   ============================================================ */
+/* ============================================================
+   FLOR DE DESPEDIDA — rectángulo vertical, responsiva
+   ============================================================ */
+.despedida-flor {
+    /* Tamaño responsivo: mínimo 130px, ideal 30vw, máximo 220px */
+    width: clamp(130px, 30vw, 220px);
+
+    /* Proporción vertical tipo retrato (3:4) */
+    aspect-ratio: 3 / 4;
+    height: auto;
+    max-height: 38vh;
+
+    object-fit: cover;
+
+    /* Marco rectangular elegante */
+    border-radius: 16px;
+    border: 4px solid #FFFDF8;
+    box-shadow:
+        0 14px 34px rgba(200, 150, 90, 0.28),
+        0 4px 12px rgba(200, 150, 90, 0.15),
+        0 0 0 2px #E8D9A8;
+
+    margin-bottom: 26px;
+
+    filter: drop-shadow(0 8px 20px rgba(230, 180, 80, 0.20));
+    animation: florFlota 3.5s ease-in-out infinite;
+    transition: transform 0.35s cubic-bezier(.34,1.56,.64,1);
+}
+
+.despedida-flor:hover {
+    transform: scale(1.03);
+}
+
+@keyframes florFlota {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-8px); }
+}
+
+.despedida-titulo {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 700;
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    color: #6b4a2b;
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+    margin-bottom: 14px;
+    text-shadow: 0 2px 12px rgba(230, 180, 80, 0.25);
+}
+
+.despedida-texto {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1.05rem, 2.6vw, 1.25rem);
+    color: #a8977a;
+    letter-spacing: 0.5px;
+    margin-bottom: 36px;
+}
+
+.btn-volver {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: clamp(1rem, 2.4vw, 1.15rem);
+    color: #ffffff;
+
+    background: linear-gradient(180deg, #f7b733 0%, #f0a017 100%);
+    border: none;
+    border-radius: 999px;
+    padding: 16px 42px;
+    cursor: pointer;
+    letter-spacing: 0.6px;
+
+    box-shadow:
+        0 8px 24px rgba(240, 160, 23, 0.45),
+        0 2px 6px rgba(240, 160, 23, 0.30),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+
+    transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+}
+
+.btn-volver:hover {
+    transform: translateY(-2px) scale(1.02);
+    filter: brightness(1.05);
+    box-shadow:
+        0 12px 30px rgba(240, 160, 23, 0.55),
+        0 4px 10px rgba(240, 160, 23, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.btn-volver:active {
+    transform: translateY(0) scale(0.99);
+}

@@ -1,0 +1,274 @@
+/* ============================================================
+   RESET Y BASE
+   ============================================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: 'Cormorant Garamond', serif;
+}
+
+body {
+    /* Fondo crema con viñeta radial amarilla suave */
+    background:
+        radial-gradient(ellipse at 50% 40%, #fff9ee 0%, #fdf3d8 35%, #f8e9c0 60%, #f3ddb0 100%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Viñeta suave en los bordes */
+body::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 45%, rgba(200, 160, 90, 0.10) 100%);
+    z-index: 1;
+}
+
+/* ============================================================
+   CANVAS DEL POLEN
+   ============================================================ */
+#polenCanvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* ============================================================
+   CONTENIDO CENTRAL
+   ============================================================ */
+.contenido {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    padding: 30px 24px;
+    max-width: 720px;
+    width: 100%;
+    animation: fadeInUp 1.4s ease-out both;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   FLOR (imagen)
+   ============================================================ */
+/* ============================================================
+   FLOR DEL INICIO — responsiva + con marco bonito
+   ============================================================ */
+/* ============================================================
+   FLOR DEL INICIO — rectángulo vertical, responsiva
+   ============================================================ */
+.flor {
+    /* Tamaño responsivo: mínimo 120px, ideal 26vw, máximo 190px */
+    width: clamp(120px, 26vw, 190px);
+
+    /* Proporción vertical tipo retrato (3:4) */
+    aspect-ratio: 3 / 4;
+    height: auto;
+    max-height: 36vh;
+
+    object-fit: cover;
+
+    /* Marco rectangular elegante */
+    border-radius: 16px;
+    border: 4px solid #FFFDF8;
+    box-shadow:
+        0 14px 34px rgba(200, 150, 90, 0.28),
+        0 4px 12px rgba(200, 150, 90, 0.15),
+        0 0 0 2px #E8D9A8;
+
+    margin: 0 auto 26px;
+    display: block;
+
+    filter: drop-shadow(0 6px 18px rgba(230, 180, 80, 0.20));
+    transition: transform 0.35s cubic-bezier(.34,1.56,.64,1);
+}
+
+.flor:hover {
+    transform: scale(1.05);
+}
+
+/* ============================================================
+   SALUDO ("Buenos días ✨")
+   ============================================================ */
+.saludo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem;
+    color: #e6a83c;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+/* ============================================================
+   TÍTULO "El Jardín / Infinita"
+   ============================================================ */
+.titulo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+    margin-bottom: 26px;
+    user-select: none;
+}
+
+.linea1 {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 600;
+    font-size: clamp(3rem, 9vw, 5.2rem);
+    color: #6b4a2b;
+    letter-spacing: 1px;
+    /* Pequeño ajuste para que la "J" baje como en la imagen */
+    padding-right: 12px;
+}
+
+.linea2 {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 700;
+    font-size: clamp(3rem, 9vw, 5.2rem);
+    color: #f0a828;
+    letter-spacing: 2px;
+    margin-top: -8px;
+    padding-left: 10px;
+    text-shadow: 0 2px 10px rgba(240, 168, 40, 0.25);
+}
+
+/* ============================================================
+   SUBTÍTULO
+   ============================================================ */
+.subtitulo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 2.4vw, 1.2rem);
+    color: #8a7a63;
+    line-height: 1.7;
+    margin-bottom: 42px;
+    font-style: normal;
+    padding: 0 10px;
+}
+
+/* ============================================================
+   BOTÓN "Presiona para comenzar"
+   ============================================================ */
+.btn-comenzar {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: clamp(1rem, 2.4vw, 1.15rem);
+    color: #ffffff;
+    letter-spacing: 0.5px;
+
+    background: linear-gradient(180deg, #f7b733 0%, #f0a017 100%);
+    border: none;
+    border-radius: 999px;
+    padding: 16px 44px;
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 24px rgba(240, 160, 23, 0.45),
+        0 2px 6px rgba(240, 160, 23, 0.30),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+
+    transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+}
+
+.btn-comenzar:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow:
+        0 12px 30px rgba(240, 160, 23, 0.55),
+        0 4px 10px rgba(240, 160, 23, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    filter: brightness(1.04);
+}
+
+.btn-comenzar:active {
+    transform: translateY(0) scale(0.99);
+    box-shadow:
+        0 5px 14px rgba(240, 160, 23, 0.40),
+        inset 0 2px 5px rgba(180, 110, 0, 0.25);
+}
+
+/* ============================================================
+   NOTA PEQUEÑA
+   ============================================================ */
+.nota {
+    margin-top: 22px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: #a8977a;
+    letter-spacing: 0.3px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 480px) {
+    .flor {
+        width: clamp(110px, 44vw, 160px);
+        max-height: 30vh;
+        border-width: 3px;
+        border-radius: 14px;
+        margin-bottom: 20px;
+    }
+    .saludo { font-size: 1.1rem; }
+    .subtitulo { margin-bottom: 32px; line-height: 1.6; }
+    .btn-comenzar { padding: 14px 34px; }
+    .nota { margin-top: 18px; font-size: 0.88rem; }
+}
+
+@media (max-height: 640px) {
+    .flor {
+        width: clamp(100px, 34vw, 140px);
+        max-height: 26vh;
+        margin-bottom: 16px;
+    }
+    .subtitulo { margin-bottom: 26px; }
+}
+/* ============================================================
+   CONTENEDOR DE VISTAS (iframe)
+   Añadido para que la música no se corte al cambiar de vista.
+   ============================================================ */
+.visor {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    z-index: 50;
+    background: transparent;
+}
+
+/* Cuando el recorrido ya empezó, mostramos el iframe
+   y ocultamos la portada. */
+body.modo-vista .visor {
+    display: block;
+    opacity: 1;
+}
+
+body.modo-vista .contenido,
+body.modo-vista #polenCanvas {
+    display: none;
+}
+
+/* Fundido de la portada al pulsar "Comenzar" */
+.contenido {
+    transition: opacity 0.6s ease;
+}
+

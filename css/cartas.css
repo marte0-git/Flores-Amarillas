@@ -1,0 +1,363 @@
+/* ============================================================
+   RESET Y BASE
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: 'Cormorant Garamond', serif;
+}
+
+body {
+    background: radial-gradient(ellipse at 50% 40%, #fff9ee 0%, #fdf3d8 35%, #f8e9c0 60%, #f3ddb0 100%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 45%, rgba(200, 160, 90, 0.10) 100%);
+    z-index: 1;
+}
+
+/* ============================================================
+   POLEN (canvas)
+   ============================================================ */
+#polenCanvas {
+    position: fixed;
+    inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* ============================================================
+   CONTADOR
+   ============================================================ */
+.contador {
+    position: fixed;
+    top: 32px;
+    right: 44px;
+    z-index: 6;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    color: #b89a6a;
+    letter-spacing: 2px;
+    font-weight: 500;
+    user-select: none;
+    text-shadow: 0 1px 4px rgba(255, 230, 180, 0.6);
+    transition: opacity 0.3s ease;
+}
+
+/* ============================================================
+   BOTÓN VOLVER (flecha arriba izquierda)
+   ============================================================ */
+.btn-atras {
+    position: fixed;
+    top: 26px;
+    left: 32px;
+    z-index: 6;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(240, 168, 40, 0.55);
+    background: rgba(255, 255, 255, 0.55);
+    color: #e6a83c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    transition: transform 0.22s ease, background 0.22s ease, box-shadow 0.22s ease, opacity 0.3s ease;
+    box-shadow: 0 4px 14px rgba(240, 168, 40, 0.18);
+}
+
+.btn-atras:hover {
+    background: rgba(255, 255, 255, 0.85);
+    transform: translateX(-3px);
+    box-shadow: 0 6px 18px rgba(240, 168, 40, 0.28);
+}
+
+.btn-atras:active { transform: translateX(-1px) scale(0.96); }
+
+.btn-atras.oculto {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ============================================================
+   ESCENARIO Y CARTA
+   ============================================================ */
+.escenario {
+    position: relative;
+    z-index: 3;
+    perspective: 1400px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.carta {
+    position: relative;
+    width: min(90vw, 620px);
+    min-height: min(72vh, 520px);
+    background: #FFFDF8;
+    border-radius: 26px;
+
+    /* Borde primaveral sutil con degradado rosa → durazno → amarillo */
+    border: 1.5px solid transparent;
+    background-image:
+        linear-gradient(#FFFDF8, #FFFDF8),
+        linear-gradient(135deg, #F7B7C4 0%, #F5D76E 45%, #A8DDB5 100%);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+
+    /* Sombra suave para que flote */
+    box-shadow:
+        0 28px 70px rgba(200, 150, 90, 0.22),
+        0 8px 24px rgba(200, 150, 90, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 40px;
+
+    overflow: hidden;
+
+    transition: transform 1.2s cubic-bezier(.22,.9,.3,1), opacity 1.2s ease;
+}
+
+/* Decoración superior: pequeño arco de color primaveral */
+.carta::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 42%;
+    height: 5px;
+    border-radius: 0 0 8px 8px;
+    background: linear-gradient(90deg, #F7B7C4, #F5D76E, #A8DDB5);
+    opacity: 0.85;
+}
+
+/* Estados de transición */
+.carta.saliendo {
+    opacity: 0;
+    transform: translateY(-18px) scale(0.94) rotateX(8deg);
+}
+
+.carta.entrando {
+    opacity: 0;
+    transform: translateY(22px) scale(0.94) rotateX(-8deg);
+}
+
+/* ============================================================
+   CONTENIDO DE LA CARTA
+   ============================================================ */
+.carta-contenido {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+    width: 100%;
+}
+
+/* ============================================================
+   IMAGEN DE LA CARTA — rectángulo vertical, responsivo y elegante
+   ============================================================ */
+.carta-flor {
+
+    width: clamp(130px, 40vw, 240px);
+
+    aspect-ratio: 3 / 4;
+    height: auto;
+    max-height: 38vh;
+
+    object-fit: cover;
+
+    border-radius: 16px;
+    border: 4px solid #FFFDF8;
+    box-shadow:
+        0 12px 28px rgba(200, 150, 90, 0.28),
+        0 4px 10px rgba(200, 150, 90, 0.15),
+        0 0 0 2px #E8D9A8;
+    transition:
+        opacity 0.35s ease,
+        transform 0.4s cubic-bezier(.34,1.56,.64,1);
+
+    /* Sombra suave cálida */
+    filter: drop-shadow(0 6px 16px rgba(230, 180, 80, 0.20));
+}
+
+.carta-flor:hover {
+    transform: scale(1.03);
+}
+
+.carta-mensaje {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(1.2rem, 3.4vw, 1.7rem);
+    color: #6b4a2b;
+    line-height: 1.6;
+    letter-spacing: 0.3px;
+    max-width: 90%;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ============================================================
+   BOTÓN CONTINUAR
+   ============================================================ */
+.btn-continuar {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: clamp(1rem, 2.3vw, 1.12rem);
+    color: #e6a83c;
+    background: transparent;
+    border: 1.5px solid rgba(240, 168, 40, 0.65);
+    border-radius: 999px;
+    padding: 13px 34px;
+    cursor: pointer;
+    letter-spacing: 0.8px;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    transition: background 0.25s ease, color 0.25s ease, transform 0.22s ease, box-shadow 0.25s ease;
+}
+
+.btn-continuar .flecha {
+    display: inline-block;
+    transition: transform 0.25s ease;
+}
+
+.btn-continuar:hover {
+    background: linear-gradient(180deg, #f7b733 0%, #f0a017 100%);
+    color: #ffffff;
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(240, 160, 23, 0.42);
+}
+
+.btn-continuar:hover .flecha { transform: translateX(4px); }
+
+.btn-continuar:active { transform: translateY(0) scale(0.98); }
+
+/* ============================================================
+   MARIPOSAS
+   ============================================================ */
+.mariposas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    overflow: hidden;
+}
+
+.mariposa {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    will-change: transform;
+    filter: drop-shadow(0 4px 6px rgba(180, 140, 200, 0.25));
+}
+
+.mariposa svg { width: 100%; height: 100%; }
+
+.mariposa .ala {
+    transform-origin: center;
+    animation: aleteo 0.22s ease-in-out infinite alternate;
+}
+
+.mariposa .ala-izq  { transform-origin: 50% 50%; animation-name: aleteoIzq; }
+.mariposa .ala-der  { transform-origin: 50% 50%; animation-name: aleteoDer; }
+
+@keyframes aleteoIzq {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0.55); }
+}
+@keyframes aleteoDer {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0.55); }
+}
+
+/* ============================================================
+   PÉTALOS CAYENDO DENTRO DE LA CARTA
+   ============================================================ */
+.petalos {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+    border-radius: 26px;
+}
+
+.petalo {
+    position: absolute;
+    top: -20px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50% 0 50% 0;
+    opacity: 0.75;
+    will-change: transform;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 600px) {
+    .contador { top: 22px; right: 22px; font-size: 1rem; }
+    .btn-atras { top: 18px; left: 18px; width: 40px; height: 40px; }
+    .carta {
+        width: 92vw;
+        min-height: 66vh;
+        padding: 40px 26px;
+        border-radius: 22px;
+    }
+    .carta-flor {
+        width: clamp(120px, 50vw, 200px);
+        max-height: 32vh;
+        border-width: 3px;
+        border-radius: 14px;
+    }
+    .carta-mensaje { font-size: 1.1rem; }
+    .btn-continuar { padding: 12px 28px; }
+}
+
+@media (max-height: 620px) {
+    .carta { min-height: 76vh; padding: 32px 26px; }
+    .carta-contenido { gap: 18px; }
+    .carta-flor { width: 56px; height: 56px; }
+}
+
+/* ============================================================
+   FADE DE ENTRADA — transición suave al cargar la vista
+   ============================================================ */
+.fade-entrada {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 40%, #fff9ee 0%, #fdf3d8 35%, #f8e9c0 60%, #f3ddb0 100%);
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 1.2s cubic-bezier(.4,0,.2,1);
+}
+
+.fade-entrada.oculto {
+    opacity: 0;
+}

@@ -1,0 +1,587 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@500;600&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+html,body{width:100%;min-height:100%;}
+
+body{
+    min-height:100vh;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:'Poppins',sans-serif;
+    position:relative;
+    background:#17120d;
+}
+
+/* =========================================================
+   FONDO DE PRUEBA
+   Cambia SOLO esta URL por tu propia fotografía.
+   ========================================================= */
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-3;
+    background-image:
+        linear-gradient(rgba(15,10,5,.28),rgba(15,10,5,.48)),
+        url("https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=2400&q=85");
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    transform:scale(1.03);
+}
+
+body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-2;
+    background:
+        radial-gradient(circle at 50% 38%,rgba(255,215,120,.12),transparent 42%),
+        linear-gradient(to bottom,rgba(0,0,0,.05),rgba(0,0,0,.35));
+    pointer-events:none;
+}
+
+/* ---------- ESCENA ---------- */
+.bouquet-container{
+    position:relative;
+    width:min(720px,100vw);
+    height:min(820px,100vh);
+    flex:0 0 auto;
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+    transform-origin:bottom center;
+    animation:sway 7s ease-in-out infinite;
+    filter:drop-shadow(0 25px 28px rgba(0,0,0,.3));
+}
+
+/* ---------- TEXTO ---------- */
+.title{
+    position:absolute;
+    top:0%;
+    width:150%;
+    text-align:center;
+    color:#fff7d1;
+    font-family:'Dancing Script',cursive;
+    font-size: 50px;
+    text-shadow:0 3px 15px rgba(60,30,0,.65);
+    z-index:100;
+    animation:fadeIn 1.8s ease-out forwards;
+    opacity:0;
+}
+
+
+
+/* ---------- PAPEL DEL RAMO ---------- */
+.paper-back{
+    position:absolute;
+    bottom:0;
+    left:50%;
+    width:430px;
+    height:345px;
+    transform:translateX(-50%);
+    background:
+      linear-gradient(125deg,rgba(255,255,255,.16),transparent 24%),
+      linear-gradient(245deg,rgba(255,255,255,.12),transparent 28%),
+      linear-gradient(145deg,#eee3d4 0%,#d9c9b7 48%,#bba28c 100%);
+    clip-path:polygon(6% 100%,18% 32%,50% 9%,82% 32%,94% 100%);
+    z-index:26;
+    filter:drop-shadow(0 10px 12px rgba(0,0,0,.28));
+}
+
+.paper-back::before,
+.paper-back::after{
+    content:"";
+    position:absolute;
+    bottom:0;
+    width:46%;
+    height:92%;
+    background:linear-gradient(150deg,rgba(255,255,255,.45),rgba(255,255,255,0));
+    opacity:.55;
+}
+.paper-back::before{
+    left:2%;
+    clip-path:polygon(0 100%,48% 0,100% 100%);
+}
+.paper-back::after{
+    right:2%;
+    transform:scaleX(-1);
+    clip-path:polygon(0 100%,48% 0,100% 100%);
+}
+
+.paper-side-left,
+.paper-side-right{
+    position:absolute;
+    bottom:-2px;
+    width:205px;
+    height:295px;
+    z-index:29;
+    pointer-events:none;
+}
+.paper-side-left{
+    left:calc(50% - 215px);
+    background:linear-gradient(130deg,#f4eadf,#c9b4a0);
+    clip-path:polygon(0 100%,55% 4%,100% 100%);
+    transform:rotate(-8deg);
+}
+.paper-side-right{
+    right:calc(50% - 215px);
+    background:linear-gradient(230deg,#f7eee5,#c6ae98);
+    clip-path:polygon(0 100%,45% 4%,100% 100%);
+    transform:rotate(8deg);
+}
+
+.paper-front{
+    position:absolute;
+    bottom:-4px;
+    left:50%;
+    width:380px;
+    height:255px;
+    transform:translateX(-50%);
+    background:
+      linear-gradient(112deg,rgba(255,255,255,.55),transparent 20%,transparent 72%,rgba(255,255,255,.25)),
+      linear-gradient(90deg,#d2bdab,#efe3d5 50%,#c5ae99);
+    clip-path:polygon(0 100%,50% 16%,100% 100%);
+    z-index:40;
+    filter:drop-shadow(0 -3px 7px rgba(0,0,0,.18));
+}
+
+.paper-front::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(90deg,
+      transparent 0 28%,
+      rgba(255,255,255,.28) 29% 30%,
+      transparent 31% 49%,
+      rgba(90,55,30,.12) 50% 51%,
+      transparent 52% 69%,
+      rgba(255,255,255,.2) 70% 71%,
+      transparent 72%);
+}
+
+.paper-front::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:0;
+    width:5px;
+    height:82%;
+    transform:translateX(-50%) rotate(1deg);
+    background:linear-gradient(to top,rgba(255,255,255,.55),transparent);
+    border-radius:50%;
+}
+
+/* Cinta que une el ramo */
+.ribbon{
+    position:absolute;
+    bottom:78px;
+    left:50%;
+    width:118px;
+    height:40px;
+    transform:translateX(-50%);
+    z-index:45;
+    background:linear-gradient(#e8b84e,#b97915);
+    border-radius:8px 8px 18px 18px;
+    box-shadow:0 5px 8px rgba(0,0,0,.3);
+}
+.ribbon::before,
+.ribbon::after{
+    content:"";
+    position:absolute;
+    top:28px;
+    width:70px;
+    height:110px;
+    background:linear-gradient(135deg,#e2a83b,#9e6414);
+    z-index:-1;
+}
+.ribbon::before{
+    left:-12px;
+    clip-path:polygon(0 0,100% 12%,55% 100%,35% 57%);
+    transform:rotate(8deg);
+}
+.ribbon::after{
+    right:-12px;
+    clip-path:polygon(0 12%,100% 0,65% 57%,45% 100%);
+    transform:rotate(-8deg);
+}
+.ribbon span{
+    display:block;
+    text-align:center;
+    line-height:40px;
+    color:#fff6d4;
+    font-size:12px;
+    letter-spacing:1px;
+}
+
+/* ---------- TALLOS ---------- */
+.stems{
+    position:absolute;
+    bottom:38px;
+    left:50%;
+    transform:translateX(-50%);
+    width:450px;
+    height:500px;
+    z-index:5;
+    animation:growStems 2s ease-out forwards;
+    transform-origin:bottom center;
+}
+.stems path{filter:drop-shadow(1px 2px 2px rgba(0,0,0,.25))}
+
+/* ---------- FLORES ---------- */
+.flower-wrapper{
+    position:absolute;
+    transform-origin:center bottom;
+    opacity:0;
+    animation:bloom 1.35s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+.flower-wrapper svg{
+    width:100%;
+    height:100%;
+    overflow:visible;
+    filter:drop-shadow(0 5px 8px rgba(50,20,0,.32));
+}
+.petals{
+    transform-origin:center;
+    transform:scale(0);
+    animation:petalGrow 1.35s ease-out forwards;
+}
+.flower-wrapper .petal{
+    transform-origin:0 0;
+}
+
+/* distribución más natural, tipo abanico */
+.f1{bottom:430px;left:145px;width:132px;z-index:4;animation-delay:1.55s}
+.f2{bottom:452px;left:292px;width:125px;z-index:5;animation-delay:1.7s}
+.f3{bottom:418px;left:425px;width:138px;z-index:4;animation-delay:1.85s}
+.f4{bottom:355px;left:78px;width:150px;z-index:7;animation-delay:2s}
+.f5{bottom:350px;left:470px;width:150px;z-index:7;animation-delay:2.15s}
+.f6{bottom:310px;left:175px;width:166px;z-index:10;animation-delay:2.3s}
+.f7{bottom:320px;left:350px;width:164px;z-index:11;animation-delay:2.45s}
+.f8{bottom:250px;left:105px;width:180px;z-index:14;animation-delay:2.6s}
+.f9{bottom:260px;left:420px;width:180px;z-index:14;animation-delay:2.75s}
+.f10{bottom:205px;left:235px;width:195px;z-index:19;animation-delay:2.95s}
+.f11{bottom:170px;left:105px;width:205px;z-index:21;animation-delay:3.1s}
+.f12{bottom:165px;left:365px;width:205px;z-index:22;animation-delay:3.25s}
+.f13{bottom:115px;left:255px;width:225px;z-index:25;animation-delay:3.4s}
+
+/* pequeñas variaciones para evitar apariencia de clones */
+.f2,.f5,.f8,.f11{transform:rotate(-4deg)}
+.f3,.f7,.f9,.f12{transform:rotate(4deg)}
+.f10{transform:rotate(-2deg)}
+.f13{transform:scale(1.04)}
+
+/* ---------- MARIPOSAS ---------- */
+.butterfly{
+    position:absolute;
+    z-index:60;
+    font-size:clamp(1.35rem,2.5vw,2rem);
+    filter:drop-shadow(0 3px 5px rgba(0,0,0,.3));
+    pointer-events:none;
+    transform-origin:center;
+    animation-timing-function:ease-in-out;
+    animation-iteration-count:infinite;
+}
+.butterfly-1{
+    left:7%;
+    top:39%;
+    animation:flyOne 8s infinite;
+}
+.butterfly-2{
+    right:5%;
+    top:48%;
+    animation:flyTwo 9s 1s infinite;
+}
+.butterfly-3{
+    left:17%;
+    top:23%;
+    font-size:1.45rem;
+    animation:flyThree 7s 2s infinite;
+}
+.butterfly-4{
+    right:18%;
+    top:27%;
+    font-size:1.55rem;
+    animation:flyFour 8.5s 1.5s infinite;
+}
+
+/* ---------- ANIMACIONES ---------- */
+
+@keyframes sway{
+    0%,100%{transform:rotate(-1deg) translateY(0)}
+    50%{transform:rotate(1deg) translateY(-8px)}
+}
+@keyframes bloom{
+    0%{transform:scale(0) translateY(45px);opacity:0}
+    65%{transform:scale(1.08) translateY(-5px);opacity:1}
+    100%{transform:scale(1) translateY(0);opacity:1}
+}
+@keyframes petalGrow{
+    0%{transform:scale(0)}
+    70%{transform:scale(1.08)}
+    100%{transform:scale(1)}
+}
+@keyframes flyOne{
+    0%,100%{transform:translate(0,0) rotate(-8deg)}
+    25%{transform:translate(42px,-35px) rotate(10deg)}
+    50%{transform:translate(75px,5px) rotate(-3deg)}
+    75%{transform:translate(30px,48px) rotate(12deg)}
+}
+@keyframes flyTwo{
+    0%,100%{transform:translate(0,0) rotate(8deg)}
+    25%{transform:translate(-35px,-42px) rotate(-12deg)}
+    50%{transform:translate(-78px,-8px) rotate(4deg)}
+    75%{transform:translate(-30px,40px) rotate(-8deg)}
+}
+@keyframes flyThree{
+    0%,100%{transform:translate(0,0) rotate(-5deg)}
+    30%{transform:translate(-25px,42px) rotate(9deg)}
+    60%{transform:translate(35px,58px) rotate(-10deg)}
+}
+@keyframes flyFour{
+    0%,100%{transform:translate(0,0) rotate(7deg)}
+    30%{transform:translate(38px,35px) rotate(-8deg)}
+    65%{transform:translate(-28px,65px) rotate(10deg)}
+}
+@keyframes growStems{
+    0%{transform:translateX(-50%) scaleY(0);opacity:0}
+    100%{transform:translateX(-50%) scaleY(1);opacity:1}
+}
+@keyframes fadeIn{to{opacity:1}}
+
+/* ---------- RESPONSIVE GENERAL ---------- */
+@media(max-width:760px){
+    body{overflow:hidden}
+    .butterfly{font-size:1.35rem}
+    .bouquet-container{
+        width:720px;
+        height:820px;
+        transform:scale(.78);
+    }
+    .bouquet-container{animation-name:swayMobile}
+    .title{top:5%}
+    .subtitle{top:13%}
+}
+@media(max-width:560px){
+    .bouquet-container{
+        transform:scale(.62);
+        margin-top:40px;
+    }
+}
+@media(max-width:400px){
+    .bouquet-container{
+        transform:scale(.51);
+        margin-top:55px;
+    }
+}
+@keyframes swayMobile{
+    0%,100%{transform:scale(.78) rotate(-.7deg) translateY(0)}
+    50%{transform:scale(.78) rotate(.7deg) translateY(-5px)}
+}
+@media(max-width:560px){
+@keyframes swayMobile{
+    0%,100%{transform:scale(.62) rotate(-.7deg) translateY(0)}
+    50%{transform:scale(.62) rotate(.7deg) translateY(-5px)}
+}}
+@media(max-width:400px){
+@keyframes swayMobile{
+    0%,100%{transform:scale(.51) rotate(-.7deg) translateY(0)}
+    50%{transform:scale(.51) rotate(.7deg) translateY(-4px)}
+}}
+@media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important}
+}
+
+/* =========================================================
+   AJUSTE FINAL: PAPEL MÁS PARECIDO AL TRAZO DE REFERENCIA
+   ========================================================= */
+.bouquet-container{
+    height:min(700px,100vh);
+}
+
+.paper-back{
+    width:400px;
+    height:10px;
+    bottom:0;
+    clip-path:polygon(
+        7% 100%,
+        17% 31%,
+        50% 12%,
+        83% 31%,
+        93% 100%
+    );
+}
+
+.paper-side-left,
+.paper-side-right{
+    width:185px;
+    height:260px;
+    bottom:-2px;
+}
+.paper-side-left{left:calc(50% - 205px);transform:rotate(-7deg)}
+.paper-side-right{right:calc(50% - 205px);transform:rotate(7deg)}
+
+.paper-front{
+    width:350px;
+    height:225px;
+    bottom:-2px;
+    clip-path:polygon(0 100%,50% 19%,100% 100%);
+}
+
+/* ============================================================
+   FADE DE ENTRADA — transición suave al cargar el ramo
+   ============================================================ */
+.fade-entrada {
+    position: fixed;
+    inset: 0;
+    background: #0f0b08;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 1.4s ease;
+}
+
+.fade-entrada.oculto {
+    opacity: 0;
+}
+
+/* ============================================================
+   RETRASO DE LAS ANIMACIONES DEL RAMO
+   Empiezan DESPUÉS del fade para que no se sienta el salto
+   ============================================================ */
+.bouquet-container {
+    opacity: 0;
+    transition: opacity 0.9s ease;
+    animation-delay: 1.2s;
+}
+
+.bouquet-container.visible {
+    opacity: 1;
+}
+
+.title {
+    animation-delay: 1.4s !important;
+}
+.subtitle {
+    animation-delay: 1.6s !important;
+}
+
+.f1  { animation-delay: 2.55s !important; }
+.f2  { animation-delay: 2.70s !important; }
+.f3  { animation-delay: 2.85s !important; }
+.f4  { animation-delay: 3.00s !important; }
+.f5  { animation-delay: 3.15s !important; }
+.f6  { animation-delay: 3.30s !important; }
+.f7  { animation-delay: 3.45s !important; }
+.f8  { animation-delay: 3.60s !important; }
+.f9  { animation-delay: 3.75s !important; }
+.f10 { animation-delay: 3.95s !important; }
+.f11 { animation-delay: 4.10s !important; }
+.f12 { animation-delay: 4.25s !important; }
+.f13 { animation-delay: 4.40s !important; }
+
+.stems {
+    animation-delay: 1.8s !important;
+}
+
+/* ============================================================
+   BOTÓN "FINALIZAR" — versión ÚNICA y definitiva
+   Esquina superior derecha · independiente del ramo
+   ============================================================ */
+.finish-button {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    bottom: auto;
+    left: auto;
+    z-index: 400;
+
+    width: auto;
+    height: auto;
+    min-width: 0;
+    min-height: 0;
+    max-width: none;
+    max-height: none;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 999px;
+
+    background: linear-gradient(135deg, #f6c344 0%, #e8a517 55%, #c07a10 100%);
+    color: #4a2a08;
+    border: 1.5px solid rgba(255, 235, 180, 0.75);
+
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 0.92rem;
+    letter-spacing: 0.8px;
+    white-space: nowrap;
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 22px rgba(160, 90, 10, 0.45),
+        0 2px 6px rgba(0, 0, 0, 0.20),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45);
+
+    animation: none !important;
+    transform: none;
+    transform-origin: center center;
+
+    transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+}
+
+.finish-button .finish-icon {
+    font-size: 1.05em;
+    filter: drop-shadow(0 1px 2px rgba(120, 70, 10, 0.4));
+}
+
+.finish-button:hover {
+    transform: translateY(-2px) scale(1.03);
+    filter: brightness(1.06);
+    box-shadow:
+        0 12px 28px rgba(160, 90, 10, 0.55),
+        0 4px 10px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.finish-button:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow:
+        0 5px 14px rgba(160, 90, 10, 0.40),
+        inset 0 2px 5px rgba(90, 50, 5, 0.30);
+}
+
+.finish-button:focus-visible {
+    outline: 3px solid rgba(255, 235, 150, 0.85);
+    outline-offset: 3px;
+}
+
+/* Responsive del botón */
+@media (max-width: 760px) {
+    .finish-button {
+        top: 16px;
+        right: 16px;
+        padding: 10px 18px;
+        font-size: 0.84rem;
+        gap: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .finish-button {
+        top: 12px;
+        right: 12px;
+        padding: 9px 15px;
+        font-size: 0.78rem;
+        letter-spacing: 0.4px;
+    }
+    .finish-button .finish-icon {
+        font-size: 0.95em;
+    }
+}

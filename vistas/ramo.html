@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ramo de Girasoles</title>
+
+<link rel="stylesheet" href="../css/ramo.css">
+</head>
+
+<body>
+
+<!-- Capa de fade de entrada -->
+<div class="fade-entrada" id="fadeEntrada"></div>
+<div class="bouquet-container">
+
+<div class="title">Toma mi hermosa chiquita, tu te mereces esto y mucho mas... 🌻</div>
+
+    <!-- Tallos y hojas -->
+    <svg class="stems" viewBox="0 0 450 500" aria-hidden="true">
+        <path d="M225 500 Q225 270 225 45" stroke="#174d20" stroke-width="12" fill="none" stroke-linecap="round"/>
+        <path d="M225 500 Q155 275 105 75" stroke="#286b2e" stroke-width="10" fill="none" stroke-linecap="round"/>
+        <path d="M225 500 Q300 270 350 75" stroke="#286b2e" stroke-width="10" fill="none" stroke-linecap="round"/>
+        <path d="M225 500 Q105 315 50 145" stroke="#347a37" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <path d="M225 500 Q345 315 400 145" stroke="#347a37" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <path d="M225 500 Q180 300 135 175" stroke="#469447" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path d="M225 500 Q270 300 320 175" stroke="#469447" stroke-width="7" fill="none" stroke-linecap="round"/>
+
+        <path d="M150 385 Q100 350 72 382 Q112 420 153 402 Q132 390 110 380" fill="#4b9945"/>
+        <path d="M300 375 Q350 335 378 365 Q338 405 297 388 Q320 376 343 365" fill="#39883c"/>
+        <path d="M178 270 Q125 232 103 260 Q145 302 181 281 Q156 267 135 256" fill="#5da951"/>
+        <path d="M272 260 Q326 222 348 250 Q306 292 269 271 Q293 257 316 247" fill="#4b9945"/>
+        <path d="M199 170 Q160 130 138 157 Q174 198 202 178 Q181 164 165 153" fill="#6ab65d"/>
+        <path d="M250 160 Q290 122 313 148 Q276 190 247 170 Q269 155 287 145" fill="#5aa84e"/>
+    </svg>
+
+    <!-- Capas de papel -->
+    <div class="paper-back"></div>
+    <div class="paper-side-left"></div>
+    <div class="paper-side-right"></div>
+
+    <!-- Girasoles -->
+    <div class="flower-wrapper f1"><svg viewBox="-80 -80 160 160"><use href="#sunflower"/></svg></div>
+    <div class="flower-wrapper f2"><svg viewBox="-80 -80 160 160"><use href="#sunflower"/></svg></div>
+    <div class="flower-wrapper f3"><svg viewBox="-80 -80 160 160"><use href="#sunflower"/></svg></div>
+    <div class="flower-wrapper f4"><svg viewBox="-80 -80 160 160"><use href="#sunflower"/></svg></div>
+    <div class="flower-wrapper f5"><svg viewBox="-80 -80 160 160"><use href="#sunflower"/></svg></div>
+    <div class="flower-wrapper f6"><svg viewBox="-80 -80 160 160"><use href="#sunflower"/></svg></div>
+    <div class="flower-wrapper f7"><svg viewBox="-80 -80 160 160"><use href="#sunflower"/></svg></div>
+    <div class="flower-wrapper f8"><svg viewBox="-80 -80 160 160"><use href="#sunflower"/></svg></div>
+    <div class="flower-wrapper f9"><svg viewBox="-80 -80 160 160"><use href="#sunflower"/></svg></div>
+    <div class="flower-wrapper f10"><svg viewBox="-80 -80 160 160"><use href="#sunflower"/></svg></div>
+    <div class="flower-wrapper f11"><svg viewBox="-80 -80 160 160"><use href="#sunflower"/></svg></div>
+    <div class="flower-wrapper f12"><svg viewBox="-80 -80 160 160"><use href="#sunflower"/></svg></div>
+    <div class="flower-wrapper f13"><svg viewBox="-80 -80 160 160"><use href="#sunflower"/></svg></div>
+
+    <!-- Papel delantero -->
+    <div class="paper-front"></div>
+    <div class="ribbon"><span>PARA TI ♡</span></div>
+
+    <!-- Mariposas decorativas que merodean suavemente el ramo -->
+    <div class="butterfly butterfly-1" aria-hidden="true">🦋</div>
+    <div class="butterfly butterfly-2" aria-hidden="true">🦋</div>
+    <div class="butterfly butterfly-3" aria-hidden="true">🦋</div>
+    <div class="butterfly butterfly-4" aria-hidden="true">🦋</div>
+
+    <!-- Definición reutilizable de un girasol -->
+    <svg width="0" height="0" style="position:absolute">
+      <defs>
+        <radialGradient id="yellowGrad" cx="50%" cy="45%" r="60%">
+          <stop offset="0%" stop-color="#fff36b"/>
+          <stop offset="45%" stop-color="#ffd21c"/>
+          <stop offset="100%" stop-color="#e69500"/>
+        </radialGradient>
+        <radialGradient id="centerGrad" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#9a6231"/>
+          <stop offset="38%" stop-color="#5b3219"/>
+          <stop offset="100%" stop-color="#29150c"/>
+        </radialGradient>
+        <filter id="petalShadow">
+          <feDropShadow dx="0" dy="2" stdDeviation="1.8" flood-opacity=".28"/>
+        </filter>
+
+        <g id="petal">
+          <path d="M0,-4 C-15,-25 -18,-55 0,-76 C18,-55 15,-25 0,-4Z"
+                fill="url(#yellowGrad)" filter="url(#petalShadow)"/>
+          <path d="M0,-7 C-7,-29 -7,-50 0,-63 C7,-50 7,-29 0,-7Z"
+                fill="rgba(255,246,120,.28)"/>
+        </g>
+
+        <g id="sunflower">
+          <g class="petals">
+            <use href="#petal" transform="rotate(0)"/>
+            <use href="#petal" transform="rotate(30)"/>
+            <use href="#petal" transform="rotate(60)"/>
+            <use href="#petal" transform="rotate(90)"/>
+            <use href="#petal" transform="rotate(120)"/>
+            <use href="#petal" transform="rotate(150)"/>
+            <use href="#petal" transform="rotate(180)"/>
+            <use href="#petal" transform="rotate(210)"/>
+            <use href="#petal" transform="rotate(240)"/>
+            <use href="#petal" transform="rotate(270)"/>
+            <use href="#petal" transform="rotate(300)"/>
+            <use href="#petal" transform="rotate(330)"/>
+          </g>
+          <!-- segunda corona -->
+          <g opacity=".72" transform="rotate(15) scale(.86)">
+            <use href="#petal" transform="rotate(0)"/>
+            <use href="#petal" transform="rotate(45)"/>
+            <use href="#petal" transform="rotate(90)"/>
+            <use href="#petal" transform="rotate(135)"/>
+            <use href="#petal" transform="rotate(180)"/>
+            <use href="#petal" transform="rotate(225)"/>
+            <use href="#petal" transform="rotate(270)"/>
+            <use href="#petal" transform="rotate(315)"/>
+          </g>
+          <circle r="25" fill="url(#centerGrad)"/>
+          <circle r="19" fill="none" stroke="#3b1e0e" stroke-width="3"
+                  stroke-dasharray="1.5 4"/>
+          <circle r="13" fill="none" stroke="#b27835" stroke-opacity=".35"
+                  stroke-width="2" stroke-dasharray="1 5"/>
+        </g>
+      </defs>
+    </svg>
+
+</div>
+
+<!-- Botón FUERA del ramo -->
+<button class="finish-button" type="button" onclick="finalizarRamo()">
+    <span class="finish-icon">✨</span>
+    Finalizar
+</button>
+
+<script src="../js/musica.js"></script>
+<script src="../js/ramo.js"></script>
+
+<script>
+    iniciarMusica();
+</script>
+
+<script>
+    // Fade de entrada: al cargar, esperamos 100ms y quitamos la capa
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const fade = document.getElementById('fadeEntrada');
+            if (fade) fade.classList.add('oculto');
+            // El ramo aparece con su propia transición
+            const ramo = document.querySelector('.bouquet-container');
+            if (ramo) ramo.classList.add('visible');
+        }, 100);
+    });
+</script>
+
+</body>
+</html>

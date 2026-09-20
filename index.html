@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Jardín Infinito 🌸</title>
+
+    <!-- Tipografías de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600;700&family=Pacifico&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <!-- CSS propio -->
+    <link rel="stylesheet" href="css/inicio.css">
+</head>
+<body>
+
+    <!-- Capa de polen (partículas) -->
+    <canvas id="polenCanvas"></canvas>
+
+    <!-- Contenido principal -->
+    <main class="contenido">
+
+        <!-- Flor -->
+        <img src="imagenes/imagen25.png" alt="Flor" class="flor">
+
+        <!-- Saludo dinámico -->
+        <p class="saludo" id="saludo">Buenos días ✨</p>
+        <p class="saludo" id="saludo">Bienvenida al... </p>
+
+        <!-- Título -->
+        <h1 class="titulo">
+            <span class="linea1">Jardín</span>
+            <span class="linea2">Infinito</span>
+        </h1>
+
+        <!-- Subtítulo -->
+        <p class="subtitulo">
+            Hay pequeños detalles que merecen convertirse en recuerdos<br>
+            para siempre.
+        </p>
+
+        <!-- Botón -->
+        <button class="btn-comenzar" id="btnComenzar">
+            Presiona para comenzar 💛
+        </button>
+
+        <!-- Texto pequeño -->
+        <p class="nota">Una pequeña sorpresa te espera...</p>
+
+    </main>
+
+
+    <!-- ============================================================
+         CONTENEDOR DE VISTAS
+         Aquí se cargan cartas / ramo / galaxia / etc. sin recargar
+         esta página, para que la música nunca se corte.
+         ============================================================ -->
+    <iframe id="visor" class="visor" title="El Jardín Infinito" src="about:blank"></iframe>
+
+    <!-- JS propio -->
+     <script src="js/polen.js"></script>
+     <script src="js/musica.js"></script>
+    <script src="js/inicio.js"></script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Ticket Eterno 🌸</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Cinzel:wght@500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/recuerdo-final.css">
+
+    <!-- html2canvas para descargar el ticket como PNG -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+<body>
+
+    <canvas id="polenCanvas"></canvas>
+
+    <!-- Serpentinas (se generan por JS) -->
+    <div class="serpentinas" id="serpentinas"></div>
+
+    <!-- Mensaje "Guardado" -->
+    <div class="toast" id="toast">¡Guardado! 🌸</div>
+
+    <main class="escenario">
+
+        <!-- ============================================================
+             VISTA 1 · FORMULARIO
+             ============================================================ -->
+        <section class="form-carta" id="formCarta">
+            <img src="../imagenes/imagen26.png" alt="Flor" class="form-flor">
+
+            <h1 class="form-titulo">Un último recuerdo…</h1>
+
+            <p class="form-texto">
+                Para que este ramo de girasoles sea oficialmente tuyo, escribe aquí tu nombre:
+            </p>
+
+            <input
+                type="text"
+                id="inputNombre"
+                class="form-input"
+                placeholder="Tu nombre o apodo…"
+                maxlength="24"
+                autocomplete="off"
+            >
+
+            <button class="btn-generar" id="btnGenerar" type="button">
+                Generar mi Ticket Eterno
+                <span class="btn-emoji">🎀</span>
+            </button>
+        </section>
+
+        <!-- ============================================================
+             VISTA 2 · TICKET
+             ============================================================ -->
+        <section class="ticket-wrapper" id="ticketWrapper">
+            <article class="ticket" id="ticket">
+
+                <!-- Estrella brillante superior -->
+                <div class="ticket-estrella">✦</div>
+
+                <!-- Encabezado -->
+                <header class="ticket-header">
+                    <p class="ticket-marca">F L O R E R Í A</p>
+                    <h2 class="ticket-nombre-marca">ETERNA</h2>
+                </header>
+
+                <!-- Imagen central (placeholder) -->
+                <div class="ticket-flor-img">
+                    <img src="../imagenes/imagen30.png" alt="Flor" id="ticketFlor">
+                </div>
+
+                <!-- Pertenencia -->
+                <p class="ticket-pertenece">Este jardín pertenece a</p>
+                <p class="ticket-dueno" id="ticketDueno">Nombre</p>
+
+                <!-- Info (fecha + dedicatorias) -->
+                <div class="ticket-info">
+                    <div class="ticket-fila ticket-fila-fecha">
+                        <span class="ticket-label">FECHA</span>
+                        <span class="ticket-valor" id="ticketFecha">—</span>
+                    </div>
+
+                    <div class="ticket-frase-central">
+                        <p class="ticket-ojitos">MI CHIQUITA HERMOSA</p>
+                        <p class="ticket-traviesa">MI ENOJONA BELLA</p>
+                    </div>
+                </div>
+
+                <!-- Frase final -->
+                <p class="ticket-frase-final">
+                    "Las flores pueden marchitarse,<br>
+                    pero algunos recuerdos no."
+                </p>
+
+                <!-- Decoraciones inferiores -->
+                <div class="ticket-deco">
+                    <span>🌸</span>
+                    <span class="brillo">✦</span>
+                    <span>🌸</span>
+                </div>
+            </article>
+
+            <!-- Botón descargar (fuera del ticket, no aparece en el PNG) -->
+            <button class="btn-guardar" id="btnGuardar" type="button">
+                Guardar Recuerdo en mi Galería 📸
+            </button>
+
+            <p class="btn-nota">Tu recuerdo será guardado como una imagen.</p>
+        </section>
+
+    </main>
+
+        <!-- Botón "Cerrar el jardín" — aparece solo tras guardar el ticket -->
+    <button class="btn-cerrar" id="btnCerrar" type="button">
+        <span class="btn-cerrar-icon">✕</span>
+        Cerrar el jardín 🌸
+    </button>
+
+    <!-- Pantalla de despedida (oculta por defecto) -->
+    <div class="despedida" id="despedida">
+        <div class="despedida-contenido">
+            <img src="../imagenes/imagen22.png" alt="Flor" class="despedida-flor">
+            <h2 class="despedida-titulo">Gracias por formar parte de mi 🌸</h2>
+            <p class="despedida-texto">Nos vemos pronto 💛</p>
+            <button class="btn-volver" id="btnVolver" type="button">
+                Volver a empezar 🔄
+            </button>
+        </div>
+    </div>
+
+    <script src="../js/musica.js"></script>
+    <script src="../js/polen.js"></script>
+    <script src="../js/recuerdo-final.js"></script>
+</body>
+</html>

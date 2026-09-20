@@ -1,0 +1,316 @@
+/* ============================================================
+   RESET Y BASE
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: 'Cormorant Garamond', serif;
+}
+
+body {
+    background: radial-gradient(ellipse at 50% 40%, #fff9ee 0%, #fdf3d8 35%, #f8e9c0 60%, #f3ddb0 100%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 45%, rgba(200, 160, 90, 0.10) 100%);
+    z-index: 1;
+}
+
+/* ============================================================
+   POLEN
+   ============================================================ */
+#polenCanvas {
+    position: fixed;
+    inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* ============================================================
+   ESCENARIO Y CARTA
+   ============================================================ */
+.escenario {
+    position: relative;
+    z-index: 3;
+    perspective: 1400px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.carta {
+    position: relative;
+    width: min(90vw, 640px);
+    min-height: min(72vh, 540px);
+    background: #FFFDF8;
+    border-radius: 26px;
+
+    border: 1.5px solid transparent;
+    background-image:
+        linear-gradient(#FFFDF8, #FFFDF8),
+        linear-gradient(135deg, #F7B7C4 0%, #F5D76E 45%, #A8DDB5 100%);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+
+    box-shadow:
+        0 28px 70px rgba(200, 150, 90, 0.22),
+        0 8px 24px rgba(200, 150, 90, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 55px 44px;
+
+    overflow: hidden;
+
+    animation: cartaEntra 0.9s cubic-bezier(.22,.9,.3,1) both;
+}
+
+@keyframes cartaEntra {
+    from { opacity: 0; transform: translateY(30px) scale(0.94); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.carta::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 42%;
+    height: 5px;
+    border-radius: 0 0 8px 8px;
+    background: linear-gradient(90deg, #F7B7C4, #F5D76E, #A8DDB5);
+    opacity: 0.85;
+}
+
+/* ============================================================
+   CONTENIDO
+   ============================================================ */
+.carta-contenido {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    width: 100%;
+}
+
+/* ============================================================
+   FLOR DEL AVISO FINAL — responsiva + con marco bonito
+   ============================================================ */
+/* ============================================================
+   FLOR DEL AVISO FINAL — rectángulo vertical, responsiva
+   ============================================================ */
+.carta-flor {
+    /* Tamaño responsivo: mínimo 130px, ideal 32vw, máximo 220px */
+    width: clamp(130px, 32vw, 220px);
+
+    /* Proporción vertical tipo retrato (3:4) */
+    aspect-ratio: 3 / 4;
+    height: auto;
+    max-height: 36vh;
+
+    object-fit: cover;
+
+    /* Marco rectangular elegante */
+    border-radius: 16px;
+    border: 4px solid #FFFDF8;
+    box-shadow:
+        0 14px 34px rgba(200, 150, 90, 0.28),
+        0 4px 12px rgba(200, 150, 90, 0.15),
+        0 0 0 2px #E8D9A8;
+
+    filter: drop-shadow(0 6px 16px rgba(230, 180, 80, 0.20));
+    transition: transform 0.35s cubic-bezier(.34,1.56,.64,1);
+}
+
+.carta-flor:hover {
+    transform: scale(1.04);
+}
+
+@keyframes florFlota {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-6px); }
+}
+
+.carta-mensaje {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: clamp(1.15rem, 3.2vw, 1.55rem);
+    color: #6b4a2b;
+    line-height: 1.6;
+    letter-spacing: 0.5px;
+    max-width: 92%;
+    text-transform: uppercase;
+}
+
+.carta-mensaje .suave {
+    display: inline-block;
+    margin-top: 18px;
+    font-family: 'Dancing Script', cursive;
+    font-weight: 600;
+    font-size: clamp(1.3rem, 3.8vw, 1.8rem);
+    text-transform: none;
+    color: #b98a3a;
+    line-height: 1.4;
+    letter-spacing: 0.4px;
+    text-shadow: 0 2px 8px rgba(230, 180, 80, 0.20);
+}
+
+/* ============================================================
+   BOTÓN
+   ============================================================ */
+.btn-continuar {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: clamp(1rem, 2.4vw, 1.15rem);
+    color: #ffffff;
+
+    background: linear-gradient(180deg, #f7b733 0%, #f0a017 100%);
+    border: none;
+    border-radius: 999px;
+    padding: 16px 42px;
+    cursor: pointer;
+    letter-spacing: 0.6px;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    box-shadow:
+        0 8px 24px rgba(240, 160, 23, 0.45),
+        0 2px 6px rgba(240, 160, 23, 0.30),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+
+    transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+}
+
+.btn-continuar .flecha {
+    display: inline-block;
+    transition: transform 0.25s ease;
+}
+
+.btn-continuar:hover {
+    transform: translateY(-2px) scale(1.02);
+    filter: brightness(1.05);
+    box-shadow:
+        0 12px 30px rgba(240, 160, 23, 0.55),
+        0 4px 10px rgba(240, 160, 23, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.btn-continuar:hover .flecha { transform: translateX(5px); }
+
+.btn-continuar:active {
+    transform: translateY(0) scale(0.99);
+    box-shadow:
+        0 5px 14px rgba(240, 160, 23, 0.40),
+        inset 0 2px 5px rgba(180, 110, 0, 0.25);
+}
+
+/* ============================================================
+   MARIPOSAS
+   ============================================================ */
+.mariposas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    overflow: hidden;
+}
+
+.mariposa {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    will-change: transform;
+    filter: drop-shadow(0 4px 6px rgba(180, 140, 200, 0.25));
+}
+
+.mariposa svg { width: 100%; height: 100%; }
+
+.mariposa .ala { transform-origin: center; }
+.mariposa .ala-izq { animation: aleteoIzq 0.22s ease-in-out infinite alternate; }
+.mariposa .ala-der { animation: aleteoDer 0.22s ease-in-out infinite alternate; }
+
+@keyframes aleteoIzq {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0.55); }
+}
+@keyframes aleteoDer {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0.55); }
+}
+
+/* ============================================================
+   PÉTALOS
+   ============================================================ */
+.petalos {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+    border-radius: 26px;
+}
+
+.petalo {
+    position: absolute;
+    top: -20px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50% 0 50% 0;
+    opacity: 0.75;
+    will-change: transform;
+}
+
+@media (max-width: 600px) {
+    .carta {
+        width: 92vw;
+        min-height: 68vh;
+        padding: 42px 28px;
+        border-radius: 22px;
+    }
+    /* ✅ Ahora la flor se adapta al ancho pero con mínimo visible */
+    .carta-flor {
+        width: clamp(130px, 48vw, 200px);
+        max-height: 32vh;
+    }
+    .carta-mensaje { font-size: 1.05rem; }
+    .carta-mensaje .suave { font-size: 1.25rem; margin-top: 14px; }
+    .btn-continuar { padding: 14px 30px; font-size: 0.98rem; }
+
+    .carta-flor {
+        width: clamp(120px, 48vw, 180px);
+        max-height: 32vh;
+        border-width: 3px;
+        border-radius: 14px;
+    }
+}
+
+@media (max-height: 620px) {
+    .carta { min-height: 78vh; padding: 36px 28px; }
+    .carta-contenido { gap: 20px; }
+    /* ✅ Solo reduce si la pantalla es MUY baja, sin bajar de 110px */
+    .carta-flor {
+        width: clamp(110px, 40vw, 180px);
+        max-height: 26vh;
+    }
+}
