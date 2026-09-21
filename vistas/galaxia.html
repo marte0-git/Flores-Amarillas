@@ -374,7 +374,7 @@
 
 const CONFIG = {
 
-    STICKER_COUNT: 100,        // déjalo como quieras (10 está bien para ver cada imagen)
+    STICKER_COUNT: 400,        // déjalo como quieras (10 está bien para ver cada imagen)
 
     CORE_RADIUS: 0.5,           // hueco central (ok)
 
@@ -382,7 +382,7 @@ const CONFIG = {
 
     SPIRAL_TURNS: 2.5,        // espiral (ok)
 
-    DISK_THICKNESS: 15,       // 👈 un poco más de volumen 3D
+    DISK_THICKNESS: 60,       // 👈 un poco más de volumen 3D 50
 
     ROTATION_SPEED: 0.06,     // 👈 ANTES 0.2 → ahora gira MUCHO más lento
 
@@ -411,7 +411,10 @@ const CONFIG = {
             '../imagenes/imagen11.png',
             '../imagenes/imagen12.png',
             '../imagenes/imagen13.png',
-            '../imagenes/imagen14.png'
+            '../imagenes/imagen14.png',
+            '../imagenes/imagen31.png',
+            '../imagenes/imagen32.png',
+            '../imagenes/imagen33.png'
 
 
         ];
@@ -516,13 +519,13 @@ const CONFIG = {
         controls.rotateSpeed = 0.6;
 
         // Velocidad de zoom conservada
-        controls.zoomSpeed = 10.0;
+        controls.zoomSpeed = 1.5;
 
         controls.enablePan = false;
 
-        controls.minDistance = 40;
+        controls.minDistance = 50;
 
-        controls.maxDistance = 400;
+        controls.maxDistance = 125;
 
         controls.minPolarAngle = 0.05;
 
@@ -977,7 +980,7 @@ const CONFIG = {
                 const rFactor =
                     Math.pow(
                         Math.random(),
-                        0.15
+                        0.45
                     );
 
 

@@ -28,12 +28,13 @@ body::after {
 }
 
 /* ============================================================
-   POLEN (canvas)
+   POLEN
    ============================================================ */
 #polenCanvas {
     position: fixed;
     inset: 0;
-    width: 100%; height: 100%;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
     z-index: 2;
 }
@@ -57,7 +58,7 @@ body::after {
 }
 
 /* ============================================================
-   BOTÓN VOLVER (flecha arriba izquierda)
+   BOTÓN VOLVER
    ============================================================ */
 .btn-atras {
     position: fixed;
@@ -78,50 +79,80 @@ body::after {
     transition: transform 0.22s ease, background 0.22s ease, box-shadow 0.22s ease, opacity 0.3s ease;
     box-shadow: 0 4px 14px rgba(240, 168, 40, 0.18);
 }
-
 .btn-atras:hover {
     background: rgba(255, 255, 255, 0.85);
     transform: translateX(-3px);
     box-shadow: 0 6px 18px rgba(240, 168, 40, 0.28);
 }
-
 .btn-atras:active { transform: translateX(-1px) scale(0.96); }
-
 .btn-atras.oculto {
     opacity: 0;
     pointer-events: none;
 }
 
 /* ============================================================
-   ESCENARIO Y CARTA
+   ESCENARIO (contenedor de las decoraciones fuera de la carta)
    ============================================================ */
 .escenario {
     position: relative;
     z-index: 3;
     perspective: 1400px;
     width: 100%;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 40px 20px;
 }
 
+/* ============================================================
+   CARTA
+   ============================================================ */
+/* ============================================================
+   CARTA — con textura sutil de papel (D4)
+   ============================================================ */
 .carta {
     position: relative;
     width: min(90vw, 620px);
     min-height: min(72vh, 520px);
-    background: #FFFDF8;
+    height: auto;
     border-radius: 26px;
 
-    /* Borde primaveral sutil con degradado rosa → durazno → amarillo */
-    border: 1.5px solid transparent;
+    /* 🎨 Textura: papel con puntitos dorados + degradado radial sutil */
+    background-color: #FFFDF8;
     background-image:
-        linear-gradient(#FFFDF8, #FFFDF8),
-        linear-gradient(135deg, #F7B7C4 0%, #F5D76E 45%, #A8DDB5 100%);
-    background-origin: border-box;
-    background-clip: padding-box, border-box;
+        /* Capa 1: puntitos dorados tenues (patrón de puntos) */
+        radial-gradient(circle, rgba(232, 201, 118, 0.15) 1px, transparent 1.5px),
+        /* Capa 2: puntitos más pequeños para más densidad */
+        radial-gradient(circle, rgba(232, 201, 118, 0.08) 0.8px, transparent 1.2px),
+        /* Capa 3: degradado radial cálido muy sutil */
+        radial-gradient(ellipse at 50% 0%, rgba(255, 235, 180, 0.35) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 100%, rgba(247, 183, 196, 0.15) 0%, transparent 55%);
 
-    /* Sombra suave para que flote */
+    /* Control del tamaño de los patrones de puntos */
+    background-size:
+        24px 24px,    /* puntitos grandes */
+        12px 12px,    /* puntitos pequeños */
+        100% 100%,    /* degradado superior */
+        100% 100%;    /* degradado inferior */
+
+    background-position:
+        0 0,
+        6px 6px,      /* offset para efecto más natural */
+        center,
+        center;
+
+    background-repeat: repeat, repeat, no-repeat, no-repeat;
+
+    /* Borde con degradado primaveral (lo que ya tenías) */
+    border: 1.5px solid transparent;
+    background-origin: border-box;
+    background-clip: padding-box, padding-box, padding-box, padding-box, border-box;
+
+    /* Truco para que el borde degradado siga funcionando */
+    /* Necesitamos que el border-box sea el último y el padding-box los 4 del fondo */
+
+    /* Sombra suave (lo que ya tenías) */
     box-shadow:
         0 28px 70px rgba(200, 150, 90, 0.22),
         0 8px 24px rgba(200, 150, 90, 0.12),
@@ -130,18 +161,72 @@ body::after {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 50px 40px;
+    padding: 45px 35px;
 
     overflow: hidden;
 
     transition: transform 1.2s cubic-bezier(.22,.9,.3,1), opacity 1.2s ease;
 }
 
-/* Decoración superior: pequeño arco de color primaveral */
+/* Aseguramos que el degradado del borde siga funcionando */
+.carta {
+    background-image:
+        /* 4 capas de fondo interno */
+        radial-gradient(circle, rgba(232, 201, 118, 0.15) 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(232, 201, 118, 0.08) 0.8px, transparent 1.2px),
+        radial-gradient(ellipse at 50% 0%, rgba(255, 235, 180, 0.35) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 100%, rgba(247, 183, 196, 0.15) 0%, transparent 55%),
+        /* 1 capa de borde degradado */
+        linear-gradient(135deg, #F7B7C4 0%, #F5D76E 45%, #A8DDB5 100%);
+
+    background-size:
+        24px 24px,
+        12px 12px,
+        100% 100%,
+        100% 100%,
+        100% 100%;
+
+    background-position:
+        0 0,
+        6px 6px,
+        center,
+        center,
+        center;
+
+    background-repeat:
+        repeat,
+        repeat,
+        no-repeat,
+        no-repeat,
+        no-repeat;
+
+    /* 🎯 CLAVE: 5 capas de padding-box (las 4 de fondo + 1 de color base) 
+       + 1 de border-box (el degradado del borde) */
+    background-origin:
+        padding-box,
+        padding-box,
+        padding-box,
+        padding-box,
+        border-box;
+
+    background-clip:
+        padding-box,
+        padding-box,
+        padding-box,
+        padding-box,
+        border-box;
+
+    /* Color base */
+    background-color: #FFFDF8;
+
+    border: 1.5px solid transparent;
+}
+
 .carta::before {
     content: "";
     position: absolute;
-    top: 0; left: 50%;
+    top: 0;
+    left: 50%;
     transform: translateX(-50%);
     width: 42%;
     height: 5px;
@@ -150,12 +235,10 @@ body::after {
     opacity: 0.85;
 }
 
-/* Estados de transición */
 .carta.saliendo {
     opacity: 0;
     transform: translateY(-18px) scale(0.94) rotateX(8deg);
 }
-
 .carta.entrando {
     opacity: 0;
     transform: translateY(22px) scale(0.94) rotateX(-8deg);
@@ -171,21 +254,17 @@ body::after {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 26px;
+    gap: 22px;
     width: 100%;
+    padding: 10px 0; 
 }
 
-/* ============================================================
-   IMAGEN DE LA CARTA — rectángulo vertical, responsivo y elegante
-   ============================================================ */
+/* Imagen */
 .carta-flor {
-
     width: clamp(130px, 40vw, 240px);
-
     aspect-ratio: 3 / 4;
     height: auto;
     max-height: 38vh;
-
     object-fit: cover;
 
     border-radius: 16px;
@@ -194,71 +273,114 @@ body::after {
         0 12px 28px rgba(200, 150, 90, 0.28),
         0 4px 10px rgba(200, 150, 90, 0.15),
         0 0 0 2px #E8D9A8;
+
     transition:
         opacity 0.35s ease,
         transform 0.4s cubic-bezier(.34,1.56,.64,1);
 
-    /* Sombra suave cálida */
     filter: drop-shadow(0 6px 16px rgba(230, 180, 80, 0.20));
 }
-
 .carta-flor:hover {
     transform: scale(1.03);
 }
 
+/* Mensaje */
 .carta-mensaje {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 500;
-    font-size: clamp(1.2rem, 3.4vw, 1.7rem);
+    font-family: 'Dancing Script', cursive;
+    font-weight: 700;
+    font-size: clamp(1.4rem, 3.5vw, 2.2rem);
     color: #6b4a2b;
-    line-height: 1.6;
-    letter-spacing: 0.3px;
-    max-width: 90%;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    line-height: 1.4;
+    letter-spacing: 0.5px;
+    max-width: 94%;
+    text-align: center;
+    text-transform: none;
+    padding: 0 10px;
+    text-shadow: 0 2px 8px rgba(230, 180, 80, 0.15);
+}
+
+/* Letra por letra */
+.carta-mensaje .letra {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: aparecerLetra 0.35s ease-out forwards;
+}
+@keyframes aparecerLetra {
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* ============================================================
-   BOTÓN CONTINUAR
+   BOTÓN CONTINUAR (con aura pulsante)
    ============================================================ */
 .btn-continuar {
+    position: relative;
     font-family: 'Cormorant Garamond', serif;
-    font-weight: 600;
-    font-size: clamp(1rem, 2.3vw, 1.12rem);
-    color: #e6a83c;
-    background: transparent;
-    border: 1.5px solid rgba(240, 168, 40, 0.65);
+    font-weight: 700;
+    font-size: clamp(1rem, 2.4vw, 1.15rem);
+    color: #ffffff;
+
+    background: linear-gradient(180deg, #f7b733 0%, #f0a017 100%);
+    border: none;
     border-radius: 999px;
-    padding: 13px 34px;
+    padding: 16px 42px;
     cursor: pointer;
-    letter-spacing: 0.8px;
+    letter-spacing: 0.6px;
 
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 
-    transition: background 0.25s ease, color 0.25s ease, transform 0.22s ease, box-shadow 0.25s ease;
+    box-shadow:
+        0 8px 24px rgba(240, 160, 23, 0.45),
+        0 2px 6px rgba(240, 160, 23, 0.30),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+
+    transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
 }
 
+/* Aura pulsante detrás */
+.btn-continuar::before {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: 999px;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(247, 183, 51, 0.55) 0%,
+        rgba(247, 183, 51, 0.25) 45%,
+        transparent 75%
+    );
+    z-index: -1;
+    animation: auraPulsante 2.2s ease-in-out infinite;
+    pointer-events: none;
+}
+@keyframes auraPulsante {
+    0%,100% { opacity: 0.55; transform: scale(1); }
+    50%     { opacity: 1;    transform: scale(1.08); }
+}
+
+.btn-continuar:hover {
+    transform: translateY(-2px) scale(1.02);
+    filter: brightness(1.05);
+    box-shadow:
+        0 12px 30px rgba(240, 160, 23, 0.55),
+        0 4px 10px rgba(240, 160, 23, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+.btn-continuar:active {
+    transform: translateY(0) scale(0.99);
+}
 .btn-continuar .flecha {
     display: inline-block;
     transition: transform 0.25s ease;
 }
-
-.btn-continuar:hover {
-    background: linear-gradient(180deg, #f7b733 0%, #f0a017 100%);
-    color: #ffffff;
-    border-color: transparent;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 24px rgba(240, 160, 23, 0.42);
+.btn-continuar:hover .flecha {
+    transform: translateX(5px);
 }
 
-.btn-continuar:hover .flecha { transform: translateX(4px); }
-
-.btn-continuar:active { transform: translateY(0) scale(0.98); }
-
 /* ============================================================
-   MARIPOSAS
+   MARIPOSAS VOLADORAS
    ============================================================ */
 .mariposas {
     position: fixed;
@@ -267,7 +389,6 @@ body::after {
     z-index: 5;
     overflow: hidden;
 }
-
 .mariposa {
     position: absolute;
     width: 34px;
@@ -275,16 +396,10 @@ body::after {
     will-change: transform;
     filter: drop-shadow(0 4px 6px rgba(180, 140, 200, 0.25));
 }
-
 .mariposa svg { width: 100%; height: 100%; }
-
-.mariposa .ala {
-    transform-origin: center;
-    animation: aleteo 0.22s ease-in-out infinite alternate;
-}
-
-.mariposa .ala-izq  { transform-origin: 50% 50%; animation-name: aleteoIzq; }
-.mariposa .ala-der  { transform-origin: 50% 50%; animation-name: aleteoDer; }
+.mariposa .ala { transform-origin: center; }
+.mariposa .ala-izq { animation: aleteoIzq 0.22s ease-in-out infinite alternate; }
+.mariposa .ala-der { animation: aleteoDer 0.22s ease-in-out infinite alternate; }
 
 @keyframes aleteoIzq {
     from { transform: scaleX(1); }
@@ -296,7 +411,7 @@ body::after {
 }
 
 /* ============================================================
-   PÉTALOS CAYENDO DENTRO DE LA CARTA
+   PÉTALOS
    ============================================================ */
 .petalos {
     position: absolute;
@@ -306,7 +421,6 @@ body::after {
     z-index: 1;
     border-radius: 26px;
 }
-
 .petalo {
     position: absolute;
     top: -20px;
@@ -315,6 +429,160 @@ body::after {
     border-radius: 50% 0 50% 0;
     opacity: 0.75;
     will-change: transform;
+}
+
+/* ============================================================
+   DECORACIONES FUERA DE LA CARTA
+   ============================================================ */
+
+/* ---------- ESQUINAS ORNAMENTALES (A1) ---------- */
+.esquina {
+    position: absolute;
+    color: #C9B6E4;
+    font-size: 1.6rem;
+    opacity: 0.75;
+    pointer-events: none;
+    z-index: 4;
+    line-height: 1;
+    text-shadow: 0 2px 6px rgba(200, 150, 200, 0.35);
+    animation: flotarEsquina 4s ease-in-out infinite;
+}
+.esquina-tl { top: -6px;    left: -6px;  transform: rotate(-15deg); }
+.esquina-tr { top: -6px;    right: -6px; transform: rotate(15deg) scaleX(-1); }
+.esquina-bl { bottom: -6px; left: -6px;  transform: rotate(15deg) scaleY(-1); }
+.esquina-br { bottom: -6px; right: -6px; transform: rotate(-15deg) scale(-1, -1); }
+
+@keyframes flotarEsquina {
+    0%,100% { transform: var(--transf, rotate(0deg)) translateY(0); opacity: 0.75; }
+    50%     { transform: var(--transf, rotate(0deg)) translateY(-4px); opacity: 1; }
+}
+
+/* ---------- CINTA SUPERIOR "RECUERDO Nº X" (A4) ---------- */
+.cinta-recuerdo {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    z-index: 6;
+    pointer-events: none;
+    animation: aparecerCinta 1.2s 0.3s ease both;
+}
+.cinta-linea {
+    display: inline-block;
+    width: 50px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #E8C976 50%, transparent);
+}
+.cinta-texto {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 600;
+    font-size: clamp(1rem, 2.2vw, 1.3rem);
+    color: #b89455;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    text-shadow: 0 1px 4px rgba(230, 180, 80, 0.2);
+}
+@keyframes aparecerCinta {
+    from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ---------- RAMITAS DECORATIVAS (A2) ---------- */
+.ramita {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 65%;
+    max-width: 340px;
+    height: auto;
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0.85;
+    animation: flotarRamita 6s ease-in-out infinite;
+}
+.ramita-top { top: 70px; }
+.ramita-bottom {
+    bottom: 40px;
+    transform: translateX(-50%) scaleY(-1);
+    animation-delay: 1.5s;
+}
+@keyframes flotarRamita {
+    0%,100% { transform: translateX(-50%) translateY(0); }
+    50%     { transform: translateX(-50%) translateY(-5px); }
+}
+
+/* ---------- HALO DORADO DETRÁS DEL TEXTO (A6) ---------- */
+.halo-texto {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85%;
+    height: 45%;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(255, 235, 180, 0.45) 0%,
+        rgba(255, 235, 180, 0.15) 35%,
+        transparent 70%
+    );
+    pointer-events: none;
+    z-index: 1;
+    filter: blur(25px);
+    animation: pulsarHalo 4s ease-in-out infinite;
+}
+@keyframes pulsarHalo {
+    0%,100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+    50%     { opacity: 1;   transform: translate(-50%, -50%) scale(1.08); }
+}
+
+/* ---------- MARIPOSA POSADA (C3) ---------- */
+.mariposa-posada {
+    position: absolute;
+    top: -18px;
+    right: 30px;
+    width: 42px;
+    height: 42px;
+    z-index: 7;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-30px) rotate(-20deg);
+    animation:
+        llegadaMariposa 1.5s 0.8s ease-out forwards,
+        flotarMariposa 3s 2.3s ease-in-out infinite;
+    filter: drop-shadow(0 4px 6px rgba(180, 140, 200, 0.35));
+}
+.mariposa-posada svg { width: 100%; height: 100%; }
+.mariposa-posada .ala { transform-origin: center; }
+.mariposa-posada .ala-izq { animation: aleteoIzq 0.3s ease-in-out infinite alternate; }
+.mariposa-posada .ala-der { animation: aleteoDer 0.3s ease-in-out infinite alternate; }
+
+@keyframes llegadaMariposa {
+    0%   { opacity: 0; transform: translateY(-40px) rotate(-25deg) scale(0.7); }
+    70%  { opacity: 1; transform: translateY(4px) rotate(5deg) scale(1.1); }
+    100% { opacity: 1; transform: translateY(0) rotate(-8deg) scale(1); }
+}
+@keyframes flotarMariposa {
+    0%,100% { transform: translateY(0) rotate(-8deg); }
+    50%     { transform: translateY(-4px) rotate(-3deg); }
+}
+
+/* ============================================================
+   FADE DE ENTRADA
+   ============================================================ */
+.fade-entrada {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 40%, #fff9ee 0%, #fdf3d8 35%, #f8e9c0 60%, #f3ddb0 100%);
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 1.2s cubic-bezier(.4,0,.2,1);
+}
+.fade-entrada.oculto {
+    opacity: 0;
 }
 
 /* ============================================================
@@ -335,29 +603,33 @@ body::after {
         border-width: 3px;
         border-radius: 14px;
     }
-    .carta-mensaje { font-size: 1.1rem; }
-    .btn-continuar { padding: 12px 28px; }
+    .carta-mensaje { font-size: 1.4rem; }
+    .btn-continuar { padding: 14px 30px; font-size: 1rem; }
+
+    /* Decoraciones en móvil */
+    .ramita { width: 85%; max-width: none; }
+    .ramita-top { top: 55px; }
+    .ramita-bottom { bottom: 30px; }
+    .cinta-recuerdo { top: 18px; gap: 10px; }
+    .cinta-linea { width: 30px; }
+    .mariposa-posada {
+        width: 34px;
+        height: 34px;
+        top: -14px;
+        right: 20px;
+    }
+    .esquina { font-size: 1.3rem; }
+    .halo-texto { width: 90%; height: 40%; }
 }
 
 @media (max-height: 620px) {
     .carta { min-height: 76vh; padding: 32px 26px; }
     .carta-contenido { gap: 18px; }
-    .carta-flor { width: 56px; height: 56px; }
-}
 
-/* ============================================================
-   FADE DE ENTRADA — transición suave al cargar la vista
-   ============================================================ */
-.fade-entrada {
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(ellipse at 50% 40%, #fff9ee 0%, #fdf3d8 35%, #f8e9c0 60%, #f3ddb0 100%);
-    z-index: 9999;
-    pointer-events: none;
-    opacity: 1;
-    transition: opacity 1.2s cubic-bezier(.4,0,.2,1);
-}
-
-.fade-entrada.oculto {
-    opacity: 0;
+    /* ✅ Ahora responsiva, no fija */
+    .carta-flor {
+        width: clamp(110px, 40vw, 180px);
+        max-height: 28vh;
+    }
+    .carta-mensaje { font-size: 1.3rem; }
 }

@@ -2,14 +2,11 @@
    1) POLEN COMPARTIDO
    ============================================================ */
 iniciarPolen();
-iniciarMusica();   // reanuda desde donde iba
+iniciarMusica();
+
 /* ============================================================
-   2) MENSAJES DE LAS 10 CARTAS
-   👉 Aquí editas los mensajes cuando quieras
-   ============================================================ */
-/* ============================================================
-   CARTAS — cada una tiene su propio mensaje e imagen
-   👉 Aquí editas los mensajes y las rutas de las imágenes
+   2) CARTAS — cada una con su mensaje e imagen
+   👉 Aquí editas los mensajes y las rutas cuando quieras
    ============================================================ */
 const CARTAS = [
     {
@@ -38,8 +35,12 @@ const CARTAS = [
     }
 ];
 
+const TOTAL = CARTAS.length;
+
+let indiceActual = 0;
+
 /* ============================================================
-   FADE DE ENTRADA
+   3) FADE DE ENTRADA
    ============================================================ */
 window.addEventListener('load', () => {
     setTimeout(() => {
@@ -48,21 +49,19 @@ window.addEventListener('load', () => {
     }, 100);
 });
 
-const TOTAL = CARTAS.length;
-
-let indiceActual = 0;
-
 /* ============================================================
-   3) ELEMENTOS DEL DOM
+   4) ELEMENTOS DEL DOM
    ============================================================ */
 const carta          = document.getElementById('carta');
 const cartaMensaje   = document.getElementById('cartaMensaje');
 const btnContinuar   = document.getElementById('btnContinuar');
 const btnAtras       = document.getElementById('btnAtras');
 const contador       = document.getElementById('contador');
+const cartaFlor      = document.getElementById('cartaFlor');
+const cintaRecuerdo  = document.getElementById('cintaRecuerdo');
 
 /* ============================================================
-   4) MARIPOSAS (SVG + vuelo animado)
+   5) MARIPOSAS (SVG + vuelo animado)
    ============================================================ */
 const mariposasCont = document.getElementById('mariposas');
 const coloresMariposa = [
@@ -96,6 +95,7 @@ function svgMariposa(c) {
 }
 
 function crearMariposas(cantidad = 5) {
+    if (!mariposasCont) return;
     for (let i = 0; i < cantidad; i++) {
         const div = document.createElement('div');
         div.className = 'mariposa';
@@ -111,9 +111,8 @@ function animarMariposa(el, seed) {
     const W = () => window.innerWidth;
     const H = () => window.innerHeight;
 
-    // Parámetros de la trayectoria (Lissajous modificada)
-    const ampX = 120 + Math.random() * 160;   // amplitud horizontal
-    const ampY = 60 + Math.random() * 110;    // amplitud vertical
+    const ampX = 120 + Math.random() * 160;
+    const ampY = 60 + Math.random() * 110;
     const speedX = 0.0006 + Math.random() * 0.0009;
     const speedY = 0.0009 + Math.random() * 0.0013;
     const phase = Math.random() * Math.PI * 2;
@@ -126,7 +125,6 @@ function animarMariposa(el, seed) {
     let tUltimoCambio = 0;
 
     function frame(t) {
-        // Cada ~6 seg cambia la base para que las mariposas no se queden fijas
         if (t - tUltimoCambio > 6000) {
             bx = baseX();
             by = baseY();
@@ -135,8 +133,6 @@ function animarMariposa(el, seed) {
 
         const x = bx + Math.sin(t * speedX + phase) * ampX + Math.sin(t * speedX * 2.3) * 30;
         const y = by + Math.cos(t * speedY + phase) * ampY + Math.sin(t * speedY * 1.7) * 20;
-
-        // Rotación ligera según dirección
         const rot = Math.sin(t * speedX + phase) * 18;
 
         el.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`;
@@ -149,12 +145,13 @@ function animarMariposa(el, seed) {
 crearMariposas(5);
 
 /* ============================================================
-   5) PÉTALOS CAYENDO DENTRO DE LA CARTA
+   6) PÉTALOS CAYENDO DENTRO DE LA CARTA
    ============================================================ */
 const petalosCont = document.getElementById('petalos');
 const coloresPetalo = ['#F7B7C4', '#F5D76E', '#C9B6E4', '#A8DDB5', '#FFD9A0'];
 
 function crearPetalo() {
+    if (!petalosCont) return;
     const p = document.createElement('span');
     p.className = 'petalo';
     p.style.background = coloresPetalo[Math.floor(Math.random() * coloresPetalo.length)];
@@ -165,9 +162,9 @@ function crearPetalo() {
     p.style.height = tamaño + 'px';
     p.style.opacity = 0.5 + Math.random() * 0.4;
 
-    const duracion = 6 + Math.random() * 6;      // seg
-    const deriva = (Math.random() - 0.5) * 80;   // px
-    const giro = (Math.random() - 0.5) * 720;    // grados
+    const duracion = 6 + Math.random() * 6;
+    const deriva = (Math.random() - 0.5) * 80;
+    const giro = (Math.random() - 0.5) * 720;
     p.style.setProperty('--deriva', deriva + 'px');
     p.style.setProperty('--giro', giro + 'deg');
 
@@ -177,7 +174,7 @@ function crearPetalo() {
     setTimeout(() => p.remove(), duracion * 1000 + 200);
 }
 
-// Inyectar keyframes dinámicamente (más limpio que un <style> aparte)
+/* Inyectar keyframes dinámicamente */
 (function inyectarKeyframes() {
     const style = document.createElement('style');
     style.textContent = `
@@ -196,28 +193,53 @@ function crearPetalo() {
     document.head.appendChild(style);
 })();
 
-// Generar pétalos de forma continua (uno cada 900-1500ms)
+/* Generar pétalos de forma continua */
 setInterval(() => {
-    if (petalosCont.childElementCount < 14) crearPetalo();
+    if (petalosCont && petalosCont.childElementCount < 14) crearPetalo();
 }, 900);
 
-// Pre-poblar algunos al cargar
+/* Pre-poblar algunos al cargar */
 for (let i = 0; i < 6; i++) {
     setTimeout(() => crearPetalo(), i * 250);
 }
 
 /* ============================================================
-   6) RENDERIZAR CARTA ACTUAL
+   7) ANIMACIÓN LETRA POR LETRA (B2)
    ============================================================ */
-const cartaFlor = document.getElementById('cartaFlor');   // 👈 nueva referencia
+function animarTextoLetraPorLetra(elemento) {
+    if (!elemento) return;
 
+    const textoOriginal = elemento.textContent || '';
+    elemento.textContent = '';
+
+    let delay = 0;
+    for (let i = 0; i < textoOriginal.length; i++) {
+        const caracter = textoOriginal[i];
+        const span = document.createElement('span');
+        span.className = 'letra';
+        span.style.animationDelay = `${delay}s`;
+
+        if (caracter === ' ') {
+            span.innerHTML = '&nbsp;';
+        } else {
+            span.textContent = caracter;
+        }
+
+        elemento.appendChild(span);
+        delay += 0.03;   // 30ms por letra → ajusta si quieres más rápido/lento
+    }
+}
+
+/* ============================================================
+   8) RENDERIZAR CARTA ACTUAL
+   ============================================================ */
 function renderCarta() {
     const carta = CARTAS[indiceActual];
 
     // Actualiza mensaje
-    cartaMensaje.textContent = carta.mensaje;
+    cartaMensaje.innerHTML = carta.mensaje;
 
-    // 🎯 Actualiza la imagen de la carta con un fade suave
+    // Actualiza la imagen con un fade suave
     if (cartaFlor) {
         cartaFlor.style.transition = 'opacity 0.35s ease';
         cartaFlor.style.opacity = '0';
@@ -227,23 +249,37 @@ function renderCarta() {
         }, 200);
     }
 
-    // Contador
-    contador.textContent = `${indiceActual + 1} / ${TOTAL}`;
+    // Contador arriba derecha ("1 / 6")
+    if (contador) {
+        contador.textContent = `${indiceActual + 1} / ${TOTAL}`;
+    }
 
-    // Botón atrás
-    if (indiceActual === 0) btnAtras.classList.add('oculto');
-    else btnAtras.classList.remove('oculto');
+    // Cinta superior "Recuerdo nº X"
+    if (cintaRecuerdo) {
+        cintaRecuerdo.textContent = `Recuerdo nº ${indiceActual + 1}`;
+    }
+
+    // Botón atrás oculto en la primera
+    if (btnAtras) {
+        if (indiceActual === 0) btnAtras.classList.add('oculto');
+        else btnAtras.classList.remove('oculto');
+    }
 
     // Texto del botón continuar
-    if (indiceActual === TOTAL - 1) {
-        btnContinuar.firstChild.textContent = 'Ver mi ramo ';
-    } else {
-        btnContinuar.firstChild.textContent = 'Continuar ';
+    if (btnContinuar && btnContinuar.firstChild) {
+        if (indiceActual === TOTAL - 1) {
+            btnContinuar.firstChild.textContent = 'Ver mi ramo ';
+        } else {
+            btnContinuar.firstChild.textContent = 'Continuar ';
+        }
     }
+
+    // 🎯 Animación letra por letra al renderizar
+    animarTextoLetraPorLetra(cartaMensaje);
 }
 
 /* ============================================================
-   7) TRANSICIÓN ENTRE CARTAS
+   9) TRANSICIÓN ENTRE CARTAS
    ============================================================ */
 function irA(nuevoIndice) {
     if (nuevoIndice < 0 || nuevoIndice >= TOTAL) return;
@@ -260,30 +296,34 @@ function irA(nuevoIndice) {
         // Forzar reflow y luego quitar "entrando"
         void carta.offsetWidth;
         carta.classList.remove('entrando');
-    }, 1000);
+    }, 1000);   // 1 segundo → coincide con la transición CSS
 }
 
 /* ============================================================
-   8) EVENTOS
+   10) EVENTOS
    ============================================================ */
-btnContinuar.addEventListener('click', () => {
-    if (indiceActual === TOTAL - 1) {
-        // Última carta → ir al aviso (siguiente sub-paso)
-        document.body.style.transition = 'opacity 0.6s ease';
-        document.body.style.opacity = '0';
-        setTimeout(() => {
-            window.location.href = 'ramo.html';
-        }, 600);
-    } else {
-        irA(indiceActual + 1);
-    }
-});
+if (btnContinuar) {
+    btnContinuar.addEventListener('click', () => {
+        if (indiceActual === TOTAL - 1) {
+            // Última carta → ir al ramo
+            document.body.style.transition = 'opacity 0.6s ease';
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                window.location.href = 'ramo.html';
+            }, 600);
+        } else {
+            irA(indiceActual + 1);
+        }
+    });
+}
 
-btnAtras.addEventListener('click', () => {
-    if (indiceActual > 0) irA(indiceActual - 1);
-});
+if (btnAtras) {
+    btnAtras.addEventListener('click', () => {
+        if (indiceActual > 0) irA(indiceActual - 1);
+    });
+}
 
 /* ============================================================
-   9) INICIO
+   11) INICIO
    ============================================================ */
 renderCarta();

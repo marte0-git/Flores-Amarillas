@@ -31,22 +31,82 @@
         </svg>
     </button>
 
-    <!-- Carta -->
+    <!-- ============================================================
+         DECORACIONES FUERA DE LA CARTA
+         ============================================================ -->
     <div class="escenario">
+
+        <!-- Esquinas ornamentales ❦ (A1) -->
+        <span class="esquina esquina-tl">❦</span>
+        <span class="esquina esquina-tr">❦</span>
+        <span class="esquina esquina-bl">❦</span>
+        <span class="esquina esquina-br">❦</span>
+
+        <!-- Cinta superior "Recuerdo nº X" (A4) -->
+        <div class="cinta-recuerdo">
+            <span class="cinta-linea"></span>
+            <span class="cinta-texto" id="cintaRecuerdo">Recuerdo nº 1</span>
+            <span class="cinta-linea"></span>
+        </div>
+
+        <!-- Ramita decorativa arriba (A2) -->
+        <svg class="ramita ramita-top" viewBox="0 0 200 40" aria-hidden="true">
+            <path d="M20 20 Q100 5 180 20" stroke="#A8DDB5" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <ellipse cx="40" cy="14" rx="6" ry="3" fill="#A8DDB5" opacity="0.75" transform="rotate(-15 40 14)"/>
+            <ellipse cx="80" cy="10" rx="6" ry="3" fill="#A8DDB5" opacity="0.75" transform="rotate(-8 80 10)"/>
+            <ellipse cx="120" cy="10" rx="6" ry="3" fill="#A8DDB5" opacity="0.75" transform="rotate(8 120 10)"/>
+            <ellipse cx="160" cy="14" rx="6" ry="3" fill="#A8DDB5" opacity="0.75" transform="rotate(15 160 14)"/>
+            <circle cx="100" cy="8" r="3" fill="#F5D76E" opacity="0.9"/>
+        </svg>
+
+        <!-- Carta -->
         <article class="carta" id="carta">
-            <!-- Pétalos cayendo (se generan por JS) -->
+
+            <!-- Halo dorado detrás del texto (A6) -->
+            <div class="halo-texto"></div>
+
+            <!-- Pétalos cayendo dentro -->
             <div class="petalos" id="petalos"></div>
+
+            <!-- Mariposa que se posa (C3) -->
+            <div class="mariposa-posada" id="mariposaPosada">
+                <svg viewBox="0 0 100 100">
+                    <g class="ala ala-izq" style="transform-origin: 50% 50%">
+                        <ellipse cx="35" cy="42" rx="22" ry="26" fill="#C9B6E4" opacity="0.95"/>
+                        <ellipse cx="35" cy="65" rx="15" ry="18" fill="#A48ED0" opacity="0.85"/>
+                    </g>
+                    <g class="ala ala-der" style="transform-origin: 50% 50%">
+                        <ellipse cx="65" cy="42" rx="22" ry="26" fill="#C9B6E4" opacity="0.95"/>
+                        <ellipse cx="65" cy="65" rx="15" ry="18" fill="#A48ED0" opacity="0.85"/>
+                    </g>
+                    <ellipse cx="50" cy="52" rx="2.6" ry="18" fill="#5b4636"/>
+                    <path d="M50 36 Q46 26 42 24" stroke="#5b4636" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+                    <path d="M50 36 Q54 26 58 24" stroke="#5b4636" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+                </svg>
+            </div>
 
             <!-- Contenido de la carta -->
             <div class="carta-contenido">
                 <img src="../imagenes/flor.png" alt="Flor" class="carta-flor" id="cartaFlor">
-                <h2 class="carta-mensaje" id="cartaMensaje">Mensaje de la carta 1…</h2>
+                <h2 class="carta-mensaje" id="cartaMensaje"></h2>
                 <button class="btn-continuar" id="btnContinuar">
                     Continuar
                     <span class="flecha">→</span>
                 </button>
             </div>
+
         </article>
+
+        <!-- Ramita decorativa abajo (A2) -->
+        <svg class="ramita ramita-bottom" viewBox="0 0 200 40" aria-hidden="true">
+            <path d="M20 20 Q100 35 180 20" stroke="#A8DDB5" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <ellipse cx="40" cy="26" rx="6" ry="3" fill="#A8DDB5" opacity="0.75" transform="rotate(15 40 26)"/>
+            <ellipse cx="80" cy="30" rx="6" ry="3" fill="#A8DDB5" opacity="0.75" transform="rotate(8 80 30)"/>
+            <ellipse cx="120" cy="30" rx="6" ry="3" fill="#A8DDB5" opacity="0.75" transform="rotate(-8 120 30)"/>
+            <ellipse cx="160" cy="26" rx="6" ry="3" fill="#A8DDB5" opacity="0.75" transform="rotate(-15 160 26)"/>
+            <circle cx="100" cy="32" r="3" fill="#F5D76E" opacity="0.9"/>
+        </svg>
+
     </div>
 
     <script src="../js/musica.js"></script>

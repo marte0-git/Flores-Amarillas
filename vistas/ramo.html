@@ -142,11 +142,17 @@
     // Fade de entrada: al cargar, esperamos 100ms y quitamos la capa
     window.addEventListener('load', () => {
         setTimeout(() => {
+            // 1) Quitamos la capa negra
             const fade = document.getElementById('fadeEntrada');
             if (fade) fade.classList.add('oculto');
-            // El ramo aparece con su propia transición
-            const ramo = document.querySelector('.bouquet-container');
-            if (ramo) ramo.classList.add('visible');
+
+            // 2) A los 700ms (mitad del fade), hacemos visible el ramo
+            //    para que las flores empiecen justo cuando el negro casi se fue
+            setTimeout(() => {
+                const ramo = document.querySelector('.bouquet-container');
+                if (ramo) ramo.classList.add('visible');
+            }, 700);
+
         }, 100);
     });
 </script>
