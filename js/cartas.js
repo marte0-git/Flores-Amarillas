@@ -39,6 +39,12 @@ const TOTAL = CARTAS.length;
 
 let indiceActual = 0;
 
+// Precargar todas las imágenes de las cartas
+CARTAS.forEach(carta => {
+    const img = new Image();
+    img.src = carta.imagen;
+});
+
 /* ============================================================
    3) FADE DE ENTRADA
    ============================================================ */
@@ -206,27 +212,38 @@ for (let i = 0; i < 6; i++) {
 /* ============================================================
    7) ANIMACIÓN LETRA POR LETRA (B2)
    ============================================================ */
+/* ============================================================
+   ANIMACIÓN PALABRA POR PALABRA (B2) — v2
+   Anima cada palabra completa (no cada letra) para que
+   el texto no se corte por la mitad.
+   ============================================================ */
 function animarTextoLetraPorLetra(elemento) {
     if (!elemento) return;
 
     const textoOriginal = elemento.textContent || '';
     elemento.textContent = '';
 
-    let delay = 0;
-    for (let i = 0; i < textoOriginal.length; i++) {
-        const caracter = textoOriginal[i];
-        const span = document.createElement('span');
-        span.className = 'letra';
-        span.style.animationDelay = `${delay}s`;
+    // Separar por palabras conservando los espacios
+    const palabras = textoOriginal.split(/(\s+)/);
 
-        if (caracter === ' ') {
-            span.innerHTML = '&nbsp;';
-        } else {
-            span.textContent = caracter;
+    let delay = 0;
+    for (let i = 0; i < palabras.length; i++) {
+        const palabra = palabras[i];
+
+        // Si es solo espacio, lo añadimos directo
+        if (/^\s+$/.test(palabra)) {
+            elemento.appendChild(document.createTextNode(palabra));
+            continue;
         }
 
+        // Envolvemos la palabra completa
+        const span = document.createElement('span');
+        span.className = 'palabra';
+        span.style.animationDelay = `${delay}s`;
+        span.textContent = palabra;
         elemento.appendChild(span);
-        delay += 0.03;   // 30ms por letra → ajusta si quieres más rápido/lento
+
+        delay += 0.15;   // 150ms entre palabras (ajusta a gusto)
     }
 }
 
@@ -239,16 +256,10 @@ function renderCarta() {
     // Actualiza mensaje
     cartaMensaje.innerHTML = carta.mensaje;
 
-    // Actualiza la imagen con un fade suave
-    if (cartaFlor) {
-        cartaFlor.style.transition = 'opacity 0.35s ease';
-        cartaFlor.style.opacity = '0';
-        setTimeout(() => {
-            cartaFlor.src = carta.imagen;
-            cartaFlor.style.opacity = '1';
-        }, 200);
-    }
-
+ // Actualizar imagen
+if (cartaFlor && carta.imagen) {
+    cartaFlor.src = carta.imagen;
+}
     // Contador arriba derecha ("1 / 6")
     if (contador) {
         contador.textContent = `${indiceActual + 1} / ${TOTAL}`;
